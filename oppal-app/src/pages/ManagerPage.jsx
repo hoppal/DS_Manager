@@ -92,19 +92,65 @@ export default function ManagerPage() {
 }
 
 function UsageGuide() {
-    const systemPrompt = `I am building an app using the Oppal Design System. 
-Please refer to the following context:
-1. design-tokens.json - The source of truth for all colors, spacing, and brand styles.
-2. @oppal/ui - The component library containing StatCard, Button, DataTable, etc.
+    const systemPrompt = `I am building an app using the Oppal Design System.
 
-When generating UI, always use components from @oppal/ui and follow the Tailwind utility patterns defined in the design tokens.`;
+## Design Tokens
+- Primary (Teal): #00af91 — buttons, active states, charts
+- Success: #16a34a — positive trends (▲)
+- Error: #dc2626 — negative trends (▼)
+- Neutral-50: #f8f9fa — backgrounds
+- Neutral-900: #212529 — headings
+
+## Typography
+- Font: 'Inter', system-ui, sans-serif
+- Metric values: text-4xl font-extrabold (800)
+- Labels: text-xs font-medium uppercase
+
+## Component Library: @oppal/ui
+Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarChart, DashboardLayout, Sidebar
+
+## Key APIs
+\`\`\`jsx
+<StatCard title="Total Spend" value="€90,000" trend="+13%" trendDirection="up" data={[10,20,30]} />
+<DataTable title="Suppliers" columns={[{header:'Name',key:'name'}]} data={[{name:'Acme'}]} />
+<Alert variant="info|success|warning|error">Message</Alert>
+<Button variant="primary|secondary|outline|ghost|danger">Label</Button>
+\`\`\`
+
+## Rules
+1. Always use components from @oppal/ui
+2. Cards: white bg, shadow-md, rounded-lg, p-6
+3. Tables: right-align numbers, uppercase headers
+4. Charts: teal (#00af91), no gridlines`;
 
     const [copiedPrompt, setCopiedPrompt] = useState(false);
+    const [copiedContext, setCopiedContext] = useState(false);
 
     const copyPrompt = () => {
         navigator.clipboard.writeText(systemPrompt);
         setCopiedPrompt(true);
         setTimeout(() => setCopiedPrompt(false), 2000);
+    };
+
+    const exportContext = async () => {
+        try {
+            const response = await fetch('/.context/ai-context.md');
+            if (response.ok) {
+                const content = await response.text();
+                navigator.clipboard.writeText(content);
+                setCopiedContext(true);
+                setTimeout(() => setCopiedContext(false), 2000);
+            } else {
+                // Fallback: copy system prompt if file not accessible
+                navigator.clipboard.writeText(systemPrompt);
+                setCopiedContext(true);
+                setTimeout(() => setCopiedContext(false), 2000);
+            }
+        } catch {
+            navigator.clipboard.writeText(systemPrompt);
+            setCopiedContext(true);
+            setTimeout(() => setCopiedContext(false), 2000);
+        }
     };
 
     return (
@@ -118,37 +164,62 @@ When generating UI, always use components from @oppal/ui and follow the Tailwind
                     </p>
                 </section>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Card>
                         <CardHeader className="pb-2">
                             <CardTitle className="text-base flex items-center gap-2">
                                 <span className="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-xs">1</span>
-                                Share Context
+                                Copy Context
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="text-sm text-neutral-600">
-                            Upload your <code className="bg-neutral-100 px-1 rounded">design-tokens.json</code> and the
-                            <code className="bg-neutral-100 px-1 rounded">@oppal/ui</code> documentation to the AI chat.
-                            This gives the AI the "rules" of your brand.
+                            Click "Export Full Context" to copy the complete design system reference to your clipboard.
                         </CardContent>
                     </Card>
                     <Card>
                         <CardHeader className="pb-2">
                             <CardTitle className="text-base flex items-center gap-2">
                                 <span className="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-xs">2</span>
-                                Use the System Prompt
+                                Paste to AI
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="text-sm text-neutral-600">
-                            Copy the system prompt below and paste it as your first message.
-                            It sets the constraints for the entire session.
+                            Paste the context as your first message to Claude or Gemini to set the design rules.
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base flex items-center gap-2">
+                                <span className="w-6 h-6 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-xs">3</span>
+                                Start Building
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-sm text-neutral-600">
+                            Ask the AI to create components. It will use @oppal/ui and follow your brand automatically.
                         </CardContent>
                     </Card>
                 </div>
 
+                {/* Quick Export Button */}
+                <div className="bg-gradient-to-r from-primary-500 to-teal-500 rounded-xl p-6 text-white">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h3 className="text-lg font-bold">Ready to use with AI?</h3>
+                            <p className="text-primary-100 text-sm mt-1">One click to copy everything Claude or Gemini needs.</p>
+                        </div>
+                        <button
+                            onClick={exportContext}
+                            className="flex items-center gap-2 bg-white text-primary-600 px-5 py-2.5 rounded-lg font-semibold hover:bg-primary-50 transition-colors shadow-lg"
+                        >
+                            {copiedContext ? <Check className="w-5 h-5" /> : <Download className="w-5 h-5" />}
+                            {copiedContext ? 'Copied!' : 'Export Full Context'}
+                        </button>
+                    </div>
+                </div>
+
                 <section className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-bold text-neutral-500 uppercase tracking-wider">System Prompt</h3>
+                        <h3 className="text-sm font-bold text-neutral-500 uppercase tracking-wider">Quick System Prompt</h3>
                         <button
                             onClick={copyPrompt}
                             className="text-xs flex items-center gap-1.5 text-primary-600 hover:text-primary-700 font-medium"
@@ -157,7 +228,7 @@ When generating UI, always use components from @oppal/ui and follow the Tailwind
                             {copiedPrompt ? 'Copied!' : 'Copy Prompt'}
                         </button>
                     </div>
-                    <div className="bg-neutral-900 rounded-xl p-6 font-mono text-sm leading-relaxed text-neutral-300 border border-neutral-800 shadow-lg">
+                    <div className="bg-neutral-900 rounded-xl p-6 font-mono text-sm leading-relaxed text-neutral-300 border border-neutral-800 shadow-lg max-h-80 overflow-y-auto">
                         <pre className="whitespace-pre-wrap">{systemPrompt}</pre>
                     </div>
                 </section>
@@ -183,11 +254,18 @@ When generating UI, always use components from @oppal/ui and follow the Tailwind
                                 <p className="text-xs text-neutral-500">Always ask the AI to use existing components before writing custom CSS.</p>
                             </div>
                         </div>
+                        <div className="flex gap-3">
+                            <div className="mt-1"><Terminal className="w-4 h-4 text-primary-500" /></div>
+                            <div>
+                                <p className="text-sm font-semibold text-neutral-900">Share the Context File</p>
+                                <p className="text-xs text-neutral-500">For new projects, share <code className="bg-neutral-200 px-1 rounded text-xs">.context/ai-context.md</code></p>
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
 
                 <Alert variant="info">
-                    Did you know? You can tell Gemini to "Study the Dashboard pages" in this app to learn how to structure complex data layouts.
+                    The full context file is at <code className="font-mono text-xs">.context/ai-context.md</code> — share this with any AI tool!
                 </Alert>
             </div>
         </div>

@@ -7,6 +7,7 @@ import QualityPage from './pages/QualityPage';
 import ContractsPage from './pages/ContractsPage';
 import ChatPage from './pages/ChatPage';
 import ManagerPage from './pages/ManagerPage';
+import BudgetOverview from './pages/BudgetOverview';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/contracts" element={<ContractsPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/manager" element={<ManagerPage />} />
+        <Route path="/budget" element={<BudgetOverview />} />
       </Routes>
     </DashboardLayout>
   );
