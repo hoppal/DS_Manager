@@ -23,7 +23,114 @@ import {
     Terminal,
     ExternalLink,
     Code,
-    MessageCircle
+    MessageCircle,
+    Layers,
+    Clipboard,
+    Search,
+    Grid,
+    // Common icons for Icon Browser
+    Home,
+    User,
+    Users,
+    Mail,
+    Phone,
+    Calendar,
+    Clock,
+    Bell,
+    Star,
+    Heart,
+    Bookmark,
+    Tag,
+    Filter,
+    SlidersHorizontal,
+    RefreshCw,
+    RotateCcw,
+    Upload,
+    File,
+    FileText,
+    Folder,
+    Image,
+    Video,
+    Music,
+    Link,
+    Share,
+    Send,
+    MessageSquare,
+    Edit,
+    Trash2,
+    Plus,
+    Minus,
+    X,
+    ChevronDown,
+    ChevronUp,
+    ChevronLeft,
+    ChevronRight,
+    ArrowUp,
+    ArrowDown,
+    ArrowLeft,
+    ArrowRight,
+    TrendingUp,
+    TrendingDown,
+    BarChart2,
+    PieChart,
+    Activity,
+    Zap,
+    Shield,
+    Lock,
+    Unlock,
+    Key,
+    Globe,
+    Map,
+    MapPin,
+    Navigation,
+    Compass,
+    Sun,
+    Moon,
+    Cloud,
+    Wifi,
+    Bluetooth,
+    Battery,
+    Power,
+    Cpu,
+    HardDrive,
+    Server,
+    Database,
+    AlertCircle,
+    AlertTriangle,
+    Info,
+    HelpCircle,
+    CheckCircle,
+    XCircle,
+    PlayCircle,
+    PauseCircle,
+    StopCircle,
+    SkipForward,
+    SkipBack,
+    Volume2,
+    VolumeX,
+    Maximize,
+    Minimize,
+    MoreHorizontal,
+    MoreVertical,
+    Menu,
+    Grip,
+    Move,
+    Package,
+    ShoppingCart,
+    CreditCard,
+    DollarSign,
+    Percent,
+    Receipt,
+    Truck,
+    Building,
+    Briefcase,
+    Award,
+    Target,
+    Flag,
+    Smile,
+    Frown,
+    ThumbsUp,
+    ThumbsDown
 } from 'lucide-react';
 
 export default function ManagerPage() {
@@ -38,6 +145,8 @@ export default function ManagerPage() {
 
     const tabs = [
         { id: 'gallery', label: 'Component Gallery', icon: Layout },
+        { id: 'patterns', label: 'Patterns', icon: Layers },
+        { id: 'icons', label: 'Icons', icon: Grid },
         { id: 'tokens', label: 'Design Tokens', icon: Palette },
         { id: 'typography', label: 'Typography', icon: Type },
         { id: 'deploy', label: 'Deployment', icon: Terminal },
@@ -82,6 +191,8 @@ export default function ManagerPage() {
 
             <div className="mt-6">
                 {activeTab === 'gallery' && <ComponentGallery />}
+                {activeTab === 'patterns' && <PatternLibrary />}
+                {activeTab === 'icons' && <IconBrowser />}
                 {activeTab === 'tokens' && <TokensManager />}
                 {activeTab === 'typography' && <TypographyManager />}
                 {activeTab === 'deploy' && <DeployWizard />}
@@ -463,6 +574,604 @@ function DeployWizard() {
                     </div>
                 </CardContent>
             </Card>
+        </div>
+    );
+}
+
+// Pattern Library Component
+function PatternLibrary() {
+    const [copiedPattern, setCopiedPattern] = useState(null);
+
+    // Sample data for previews
+    const sampleOrders = [
+        { id: 'ORD-001', customer: 'Acme Corp', amount: '€12,450' },
+        { id: 'ORD-002', customer: 'Tech Inc', amount: '€8,200' },
+    ];
+
+    const patterns = [
+        {
+            id: 'stats-row',
+            name: 'Stats Row',
+            description: '3-column grid of StatCards for KPI display',
+            category: 'Dashboard',
+            code: `<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <StatCard title="Revenue" value="€90,000" trend="+12%" trendDirection="up" />
+  <StatCard title="Users" value="1,234" trend="+5%" trendDirection="up" />
+  <StatCard title="Orders" value="456" trend="-2%" trendDirection="down" />
+</div>`,
+            render: () => (
+                <div className="grid grid-cols-3 gap-3 scale-[0.85] origin-top-left">
+                    <StatCard title="Revenue" value="€90K" trend="+12%" trendDirection="up" />
+                    <StatCard title="Users" value="1,234" trend="+5%" trendDirection="up" />
+                    <StatCard title="Orders" value="456" trend="-2%" trendDirection="down" />
+                </div>
+            ),
+        },
+        {
+            id: 'table-with-header',
+            name: 'Data Table Section',
+            description: 'Card-wrapped table with header and filters',
+            category: 'Data',
+            code: `<Card>
+  <CardHeader className="flex flex-row items-center justify-between">
+    <CardTitle>Recent Orders</CardTitle>
+    <Button variant="outline" size="sm">Export</Button>
+  </CardHeader>
+  <CardContent>
+    <DataTable columns={[...]} data={orders} />
+  </CardContent>
+</Card>`,
+            render: () => (
+                <Card className="scale-[0.9] origin-top-left">
+                    <CardHeader className="flex flex-row items-center justify-between py-3">
+                        <CardTitle className="text-sm">Recent Orders</CardTitle>
+                        <Button variant="outline" size="sm">Export</Button>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                        <DataTable
+                            columns={[
+                                { header: 'Order ID', key: 'id' },
+                                { header: 'Customer', key: 'customer' },
+                                { header: 'Amount', key: 'amount', align: 'right' },
+                            ]}
+                            data={sampleOrders}
+                        />
+                    </CardContent>
+                </Card>
+            ),
+        },
+        {
+            id: 'chart-grid',
+            name: 'Chart Grid',
+            description: '3 donut charts for percentage metrics',
+            category: 'Charts',
+            code: `<div className="grid grid-cols-3 gap-6">
+  <Card>
+    <CardContent className="flex justify-center">
+      <DonutChart percentage={75} label="Conversion" />
+    </CardContent>
+  </Card>
+  ...
+</div>`,
+            render: () => (
+                <div className="flex gap-3 scale-[0.8] origin-top-left">
+                    <DonutChart percentage={75} label="Conv" />
+                    <DonutChart percentage={82} label="Ret" />
+                    <DonutChart percentage={94} label="Sat" />
+                </div>
+            ),
+        },
+        {
+            id: 'form-card',
+            name: 'Form Card',
+            description: 'Card with form inputs and submit button',
+            category: 'Forms',
+            code: `<Card className="max-w-md">
+  <CardHeader>
+    <CardTitle>Create Account</CardTitle>
+  </CardHeader>
+  <CardContent className="space-y-4">
+    <Input label="Email" placeholder="you@example.com" />
+    <Input label="Password" type="password" />
+    <Button className="w-full">Sign Up</Button>
+  </CardContent>
+</Card>`,
+            render: () => (
+                <Card className="scale-[0.85] origin-top-left w-full">
+                    <CardHeader className="py-3">
+                        <CardTitle className="text-sm">Create Account</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3 pt-0">
+                        <Input label="Email" placeholder="you@example.com" />
+                        <Button className="w-full" size="sm">Sign Up</Button>
+                    </CardContent>
+                </Card>
+            ),
+        },
+        {
+            id: 'alert-stack',
+            name: 'Alert Stack',
+            description: 'Stacked alerts for notifications',
+            category: 'Feedback',
+            code: `<div className="space-y-4">
+  <Alert variant="success" title="Payment Received">
+    Your payment has been processed.
+  </Alert>
+  <Alert variant="warning" title="Low Stock">
+    3 products running low.
+  </Alert>
+  <Alert variant="error" title="Sync Failed">
+    Unable to sync. Retry?
+  </Alert>
+</div>`,
+            render: () => (
+                <div className="space-y-2 scale-[0.85] origin-top-left">
+                    <Alert variant="success" title="Payment Received">Processed</Alert>
+                    <Alert variant="warning" title="Low Stock">3 items</Alert>
+                    <Alert variant="error" title="Sync Failed">Retry?</Alert>
+                </div>
+            ),
+        },
+        {
+            id: 'page-header',
+            name: 'Page Header',
+            description: 'Title, subtitle, and action buttons',
+            category: 'Layout',
+            code: `<div className="flex items-center justify-between gap-4 mb-6">
+  <div>
+    <h1 className="text-2xl font-bold">Dashboard</h1>
+    <p className="text-neutral-600">Overview of metrics</p>
+  </div>
+  <div className="flex items-center gap-3">
+    <Button variant="secondary">Settings</Button>
+    <Button>Add New</Button>
+  </div>
+</div>`,
+            render: () => (
+                <div className="flex items-center justify-between gap-4 scale-[0.85] origin-top-left">
+                    <div>
+                        <h1 className="text-lg font-bold text-neutral-900">Dashboard</h1>
+                        <p className="text-xs text-neutral-600">Overview of metrics</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Button variant="secondary" size="sm">Settings</Button>
+                        <Button size="sm">Add New</Button>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            id: 'button-group',
+            name: 'Button Group',
+            description: 'Primary, secondary, and outline buttons together',
+            category: 'Actions',
+            code: `<div className="flex items-center gap-3">
+  <Button>Save Changes</Button>
+  <Button variant="secondary">Cancel</Button>
+  <Button variant="outline">Reset</Button>
+  <Button variant="ghost">Delete</Button>
+</div>`,
+            render: () => (
+                <div className="flex items-center gap-2 scale-[0.85] origin-top-left flex-wrap">
+                    <Button size="sm">Save</Button>
+                    <Button variant="secondary" size="sm">Cancel</Button>
+                    <Button variant="outline" size="sm">Reset</Button>
+                    <Button variant="ghost" size="sm">Delete</Button>
+                </div>
+            ),
+        },
+        {
+            id: 'search-bar',
+            name: 'Search Bar',
+            description: 'Input with search icon and filter button',
+            category: 'Navigation',
+            code: `<div className="flex items-center gap-3">
+  <div className="relative flex-1">
+    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+    <Input className="pl-10" placeholder="Search suppliers..." />
+  </div>
+  <Button variant="outline">Filters</Button>
+</div>`,
+            render: () => (
+                <div className="flex items-center gap-2 scale-[0.9] origin-top-left">
+                    <Input placeholder="Search suppliers..." />
+                    <Button variant="outline" size="sm">Filters</Button>
+                </div>
+            ),
+        },
+        {
+            id: 'metric-card-chart',
+            name: 'Metric Card with Chart',
+            description: 'StatCard with embedded mini bar chart',
+            category: 'Dashboard',
+            code: `<StatCard
+  title="Monthly Revenue"
+  value="€142,500"
+  trend="+18.5%"
+  trendDirection="up"
+  data={[45, 52, 38, 65, 72, 58, 80, 95, 88, 102, 115, 142]}
+/>`,
+            render: () => (
+                <div className="scale-[0.85] origin-top-left">
+                    <StatCard
+                        title="Monthly Revenue"
+                        value="€142K"
+                        trend="+18%"
+                        trendDirection="up"
+                        data={[45, 52, 38, 65, 72, 58, 80, 95, 88, 102, 115, 142]}
+                    />
+                </div>
+            ),
+        },
+        {
+            id: 'empty-state',
+            name: 'Empty State',
+            description: 'Placeholder for when no data exists',
+            category: 'Feedback',
+            code: `<Card className="text-center py-12">
+  <CardContent>
+    <div className="text-neutral-300 mb-4">
+      <Inbox className="w-12 h-12 mx-auto" />
+    </div>
+    <h3 className="text-lg font-semibold text-neutral-700">No suppliers yet</h3>
+    <p className="text-neutral-500 mt-1">Get started by adding your first supplier.</p>
+    <Button className="mt-4">Add Supplier</Button>
+  </CardContent>
+</Card>`,
+            render: () => (
+                <Card className="text-center py-6 scale-[0.85] origin-top-left">
+                    <CardContent>
+                        <div className="text-neutral-300 mb-2">
+                            <Layout className="w-8 h-8 mx-auto" />
+                        </div>
+                        <h3 className="text-sm font-semibold text-neutral-700">No data yet</h3>
+                        <p className="text-xs text-neutral-500 mt-1">Add your first item</p>
+                        <Button size="sm" className="mt-3">Add Item</Button>
+                    </CardContent>
+                </Card>
+            ),
+        },
+        {
+            id: 'two-col-layout',
+            name: 'Two-Column Card Layout',
+            description: 'Side-by-side cards for comparison',
+            category: 'Layout',
+            code: `<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <Card>
+    <CardHeader><CardTitle>This Month</CardTitle></CardHeader>
+    <CardContent>
+      <StatCard title="Revenue" value="€45,000" />
+    </CardContent>
+  </Card>
+  <Card>
+    <CardHeader><CardTitle>Last Month</CardTitle></CardHeader>
+    <CardContent>
+      <StatCard title="Revenue" value="€38,000" />
+    </CardContent>
+  </Card>
+</div>`,
+            render: () => (
+                <div className="grid grid-cols-2 gap-3 scale-[0.8] origin-top-left">
+                    <Card>
+                        <CardContent className="py-3">
+                            <div className="text-xs text-neutral-500">This Month</div>
+                            <div className="text-lg font-bold text-neutral-900">€45K</div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="py-3">
+                            <div className="text-xs text-neutral-500">Last Month</div>
+                            <div className="text-lg font-bold text-neutral-900">€38K</div>
+                        </CardContent>
+                    </Card>
+                </div>
+            ),
+        },
+        {
+            id: 'action-footer',
+            name: 'Action Footer',
+            description: 'Sticky footer with save/cancel actions',
+            category: 'Actions',
+            code: `<div className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 p-4">
+  <div className="max-w-4xl mx-auto flex items-center justify-between">
+    <span className="text-sm text-neutral-500">Unsaved changes</span>
+    <div className="flex items-center gap-3">
+      <Button variant="secondary">Discard</Button>
+      <Button>Save Changes</Button>
+    </div>
+  </div>
+</div>`,
+            render: () => (
+                <div className="bg-white border border-neutral-200 rounded-lg p-3 scale-[0.85] origin-top-left">
+                    <div className="flex items-center justify-between">
+                        <span className="text-xs text-neutral-500">Unsaved</span>
+                        <div className="flex items-center gap-2">
+                            <Button variant="secondary" size="sm">Discard</Button>
+                            <Button size="sm">Save</Button>
+                        </div>
+                    </div>
+                </div>
+            ),
+        },
+    ];
+
+    const copyCode = (patternId, code) => {
+        navigator.clipboard.writeText(code);
+        setCopiedPattern(patternId);
+        setTimeout(() => setCopiedPattern(null), 2000);
+    };
+
+    const categories = [...new Set(patterns.map(p => p.category))];
+
+    return (
+        <div className="space-y-8">
+            <section className="space-y-4">
+                <h2 className="text-xl font-bold text-neutral-900">Pattern Library</h2>
+                <p className="text-neutral-600">
+                    Pre-built layout compositions using @oppal/ui components. Copy and customize for rapid development.
+                </p>
+            </section>
+
+            {categories.map(category => (
+                <section key={category} className="space-y-4">
+                    <h3 className="text-sm font-bold text-neutral-500 uppercase tracking-wider">{category}</h3>
+                    <div className="space-y-6">
+                        {patterns.filter(p => p.category === category).map(pattern => (
+                            <Card key={pattern.id} className="overflow-hidden">
+                                <CardHeader className="pb-2">
+                                    <div className="flex items-center justify-between">
+                                        <CardTitle className="text-base">{pattern.name}</CardTitle>
+                                        <button
+                                            onClick={() => copyCode(pattern.id, pattern.code)}
+                                            className="flex items-center gap-1.5 text-xs font-medium text-primary-600 hover:text-primary-700"
+                                        >
+                                            {copiedPattern === pattern.id ? (
+                                                <><Check className="w-3.5 h-3.5" /> Copied!</>
+                                            ) : (
+                                                <><Clipboard className="w-3.5 h-3.5" /> Copy Code</>
+                                            )}
+                                        </button>
+                                    </div>
+                                    <p className="text-sm text-neutral-500">{pattern.description}</p>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                        {/* Live Preview */}
+                                        <div className="bg-neutral-50 border border-neutral-200 rounded-lg p-4 min-h-[120px] overflow-hidden">
+                                            <div className="text-[10px] font-medium text-neutral-400 uppercase tracking-wider mb-3">Preview</div>
+                                            <div className="overflow-hidden">
+                                                {pattern.render()}
+                                            </div>
+                                        </div>
+                                        {/* Code Block */}
+                                        <div className="bg-neutral-900 rounded-lg p-4 font-mono text-xs text-neutral-300 overflow-x-auto max-h-48">
+                                            <pre className="whitespace-pre-wrap">{pattern.code}</pre>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </section>
+            ))}
+
+            <Alert variant="info">
+                These patterns use components from <code className="font-mono text-xs">@oppal/ui</code>.
+                Make sure to import the required components before using.
+            </Alert>
+        </div>
+    );
+}
+
+// Icon Browser Component
+function IconBrowser() {
+    const [searchQuery, setSearchQuery] = useState('');
+    const [copiedIcon, setCopiedIcon] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState('all');
+
+    const iconCategories = {
+        'Navigation': [
+            { name: 'Home', component: Home },
+            { name: 'Menu', component: Menu },
+            { name: 'Search', component: Search },
+            { name: 'ChevronDown', component: ChevronDown },
+            { name: 'ChevronUp', component: ChevronUp },
+            { name: 'ChevronLeft', component: ChevronLeft },
+            { name: 'ChevronRight', component: ChevronRight },
+            { name: 'ArrowUp', component: ArrowUp },
+            { name: 'ArrowDown', component: ArrowDown },
+            { name: 'ArrowLeft', component: ArrowLeft },
+            { name: 'ArrowRight', component: ArrowRight },
+            { name: 'ExternalLink', component: ExternalLink },
+        ],
+        'Actions': [
+            { name: 'Plus', component: Plus },
+            { name: 'Minus', component: Minus },
+            { name: 'X', component: X },
+            { name: 'Check', component: Check },
+            { name: 'Edit', component: Edit },
+            { name: 'Trash2', component: Trash2 },
+            { name: 'Copy', component: Copy },
+            { name: 'Download', component: Download },
+            { name: 'Upload', component: Upload },
+            { name: 'RefreshCw', component: RefreshCw },
+            { name: 'Settings', component: Settings },
+            { name: 'MoreHorizontal', component: MoreHorizontal },
+        ],
+        'Communication': [
+            { name: 'Mail', component: Mail },
+            { name: 'Phone', component: Phone },
+            { name: 'MessageSquare', component: MessageSquare },
+            { name: 'MessageCircle', component: MessageCircle },
+            { name: 'Send', component: Send },
+            { name: 'Share', component: Share },
+            { name: 'Bell', component: Bell },
+        ],
+        'Users': [
+            { name: 'User', component: User },
+            { name: 'Users', component: Users },
+            { name: 'Smile', component: Smile },
+            { name: 'Frown', component: Frown },
+            { name: 'ThumbsUp', component: ThumbsUp },
+            { name: 'ThumbsDown', component: ThumbsDown },
+        ],
+        'Status': [
+            { name: 'CheckCircle', component: CheckCircle },
+            { name: 'XCircle', component: XCircle },
+            { name: 'AlertCircle', component: AlertCircle },
+            { name: 'AlertTriangle', component: AlertTriangle },
+            { name: 'Info', component: Info },
+            { name: 'HelpCircle', component: HelpCircle },
+        ],
+        'Charts': [
+            { name: 'TrendingUp', component: TrendingUp },
+            { name: 'TrendingDown', component: TrendingDown },
+            { name: 'BarChart2', component: BarChart2 },
+            { name: 'PieChart', component: PieChart },
+            { name: 'Activity', component: Activity },
+            { name: 'Target', component: Target },
+        ],
+        'Files': [
+            { name: 'File', component: File },
+            { name: 'FileText', component: FileText },
+            { name: 'Folder', component: Folder },
+            { name: 'Image', component: Image },
+            { name: 'Video', component: Video },
+            { name: 'Link', component: Link },
+        ],
+        'Commerce': [
+            { name: 'ShoppingCart', component: ShoppingCart },
+            { name: 'CreditCard', component: CreditCard },
+            { name: 'DollarSign', component: DollarSign },
+            { name: 'Percent', component: Percent },
+            { name: 'Receipt', component: Receipt },
+            { name: 'Package', component: Package },
+            { name: 'Truck', component: Truck },
+        ],
+        'Security': [
+            { name: 'Lock', component: Lock },
+            { name: 'Unlock', component: Unlock },
+            { name: 'Shield', component: Shield },
+            { name: 'Key', component: Key },
+            { name: 'Eye', component: Eye },
+        ],
+        'Date & Time': [
+            { name: 'Calendar', component: Calendar },
+            { name: 'Clock', component: Clock },
+        ],
+        'Misc': [
+            { name: 'Star', component: Star },
+            { name: 'Heart', component: Heart },
+            { name: 'Bookmark', component: Bookmark },
+            { name: 'Tag', component: Tag },
+            { name: 'Flag', component: Flag },
+            { name: 'Award', component: Award },
+            { name: 'Zap', component: Zap },
+            { name: 'Globe', component: Globe },
+            { name: 'MapPin', component: MapPin },
+            { name: 'Building', component: Building },
+            { name: 'Briefcase', component: Briefcase },
+        ],
+    };
+
+    const allIcons = Object.values(iconCategories).flat();
+
+    const filteredIcons = selectedCategory === 'all'
+        ? allIcons.filter(icon => icon.name.toLowerCase().includes(searchQuery.toLowerCase()))
+        : iconCategories[selectedCategory]?.filter(icon =>
+            icon.name.toLowerCase().includes(searchQuery.toLowerCase())
+        ) || [];
+
+    const copyImport = (iconName) => {
+        const importStatement = `import { ${iconName} } from 'lucide-react';`;
+        navigator.clipboard.writeText(importStatement);
+        setCopiedIcon(iconName);
+        setTimeout(() => setCopiedIcon(null), 2000);
+    };
+
+    const categories = ['all', ...Object.keys(iconCategories)];
+
+    return (
+        <div className="space-y-6">
+            <section className="space-y-4">
+                <h2 className="text-xl font-bold text-neutral-900">Icon Browser</h2>
+                <p className="text-neutral-600">
+                    Browse and copy Lucide React icons. Click any icon to copy its import statement.
+                </p>
+            </section>
+
+            {/* Search and Filter */}
+            <div className="flex flex-col md:flex-row gap-4">
+                <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                    <input
+                        type="text"
+                        placeholder="Search icons..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 border border-neutral-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    />
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                    {categories.map(cat => (
+                        <button
+                            key={cat}
+                            onClick={() => setSelectedCategory(cat)}
+                            className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${selectedCategory === cat
+                                    ? 'bg-primary-500 text-white'
+                                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                                }`}
+                        >
+                            {cat === 'all' ? 'All' : cat}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Icon count */}
+            <p className="text-sm text-neutral-500">
+                Showing {filteredIcons.length} icon{filteredIcons.length !== 1 ? 's' : ''}
+            </p>
+
+            {/* Icon Grid */}
+            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3">
+                {filteredIcons.map((icon) => {
+                    const IconComponent = icon.component;
+                    return (
+                        <button
+                            key={icon.name}
+                            onClick={() => copyImport(icon.name)}
+                            className={`group flex flex-col items-center justify-center p-3 rounded-lg border transition-all ${copiedIcon === icon.name
+                                    ? 'border-primary-500 bg-primary-50'
+                                    : 'border-neutral-200 hover:border-primary-300 hover:bg-neutral-50'
+                                }`}
+                            title={`Click to copy: import { ${icon.name} } from 'lucide-react'`}
+                        >
+                            <IconComponent className={`w-5 h-5 ${copiedIcon === icon.name ? 'text-primary-600' : 'text-neutral-600'
+                                }`} />
+                            <span className={`mt-1.5 text-[10px] truncate max-w-full ${copiedIcon === icon.name ? 'text-primary-600 font-medium' : 'text-neutral-500'
+                                }`}>
+                                {copiedIcon === icon.name ? 'Copied!' : icon.name}
+                            </span>
+                        </button>
+                    );
+                })}
+            </div>
+
+            {filteredIcons.length === 0 && (
+                <Card className="text-center py-12">
+                    <CardContent>
+                        <Search className="w-12 h-12 mx-auto text-neutral-300 mb-4" />
+                        <h3 className="text-lg font-semibold text-neutral-700">No icons found</h3>
+                        <p className="text-neutral-500 mt-1">Try a different search term or category.</p>
+                    </CardContent>
+                </Card>
+            )}
+
+            <Alert variant="info">
+                All icons are from <code className="font-mono text-xs">lucide-react</code>.
+                See the full library at <a href="https://lucide.dev" target="_blank" rel="noopener noreferrer" className="underline">lucide.dev</a>
+            </Alert>
         </div>
     );
 }
