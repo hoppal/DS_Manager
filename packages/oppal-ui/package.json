@@ -1,0 +1,32 @@
+{
+  "name": "@oppal/ui",
+  "version": "1.0.0",
+  "main": "dist/oppal-ui.js",
+  "module": "dist/oppal-ui.js",
+  "exports": {
+    ".": {
+      "import": "./dist/oppal-ui.js",
+      "require": "./dist/oppal-ui.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "tokens",
+    "tailwind.preset.cjs"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18",
+    "react-router-dom": ">=6",
+    "lucide-react": ">=0.200.0",
+    "recharts": ">=2.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "vite": "^5.0.0"
+  }
+}
