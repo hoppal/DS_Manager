@@ -1,13 +1,10 @@
 {
   "name": "@oppal/ui",
   "version": "1.0.0",
-  "main": "dist/oppal-ui.js",
-  "module": "dist/oppal-ui.js",
+  "main": "src/index.js",
+  "module": "src/index.js",
   "exports": {
-    ".": {
-      "import": "./dist/oppal-ui.js",
-      "require": "./dist/oppal-ui.cjs"
-    }
+    ".": "./src/index.js"
   },
   "files": [
     "dist",
