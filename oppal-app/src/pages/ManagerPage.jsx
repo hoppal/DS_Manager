@@ -143,6 +143,91 @@ export default function ManagerPage() {
         setTimeout(() => setCopied(false), 2000);
     };
 
+    const exportConfig = () => {
+        const config = {
+            name: "Prism Design System",
+            version: "1.0.0",
+            colors: {
+                primary: {
+                    50: "#e6f7f4",
+                    100: "#b3e6dd",
+                    200: "#80d5c6",
+                    300: "#4dc4af",
+                    400: "#1ab398",
+                    500: "#00af91",
+                    600: "#009c82",
+                    700: "#008973",
+                    800: "#007664",
+                    900: "#006355"
+                },
+                neutral: {
+                    50: "#f9fafb",
+                    100: "#f3f4f6",
+                    200: "#e5e7eb",
+                    300: "#d1d5db",
+                    400: "#9ca3af",
+                    500: "#6b7280",
+                    600: "#4b5563",
+                    700: "#374151",
+                    800: "#1f2937",
+                    900: "#111827"
+                },
+                success: "#10b981",
+                warning: "#f59e0b",
+                danger: "#ef4444",
+                info: "#3b82f6"
+            },
+            typography: {
+                fontFamily: "'Inter', system-ui, sans-serif",
+                weights: {
+                    normal: 400,
+                    medium: 500,
+                    semibold: 600,
+                    bold: 700,
+                    extrabold: 800
+                },
+                sizes: {
+                    xs: "0.75rem",
+                    sm: "0.875rem",
+                    base: "1rem",
+                    lg: "1.125rem",
+                    xl: "1.25rem",
+                    "2xl": "1.5rem",
+                    "3xl": "1.875rem",
+                    "4xl": "2.25rem"
+                }
+            },
+            spacing: {
+                grid: "4px",
+                values: [4, 8, 12, 16, 24, 32, 48, 64, 96, 128]
+            },
+            components: [
+                "Button",
+                "Card",
+                "StatCard",
+                "DataTable",
+                "Alert",
+                "Input",
+                "DonutChart",
+                "MiniBarChart",
+                "DashboardLayout",
+                "Sidebar"
+            ],
+            exportedAt: new Date().toISOString()
+        };
+
+        const dataStr = JSON.stringify(config, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'prism-ds-config.json';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     const tabs = [
         { id: 'gallery', label: 'Component Gallery', icon: Layout },
         { id: 'patterns', label: 'Patterns', icon: Layers },
@@ -157,15 +242,15 @@ export default function ManagerPage() {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-neutral-900">Oppal DS Manager</h1>
-                    <p className="text-neutral-600">Central hub for managing and applying the Oppal Design System.</p>
+                    <h1 className="text-2xl font-bold text-neutral-900">Prism DS Manager</h1>
+                    <p className="text-neutral-600">Central hub for managing and applying the Prism Design System.</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <Button variant="secondary" onClick={copyCommand}>
                         {copied ? <Check className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
                         {copied ? 'Copied' : 'Copy Setup Script'}
                     </Button>
-                    <Button>
+                    <Button onClick={exportConfig}>
                         <Download className="w-4 h-4 mr-2" />
                         Export Config
                     </Button>
@@ -203,7 +288,7 @@ export default function ManagerPage() {
 }
 
 function UsageGuide() {
-    const systemPrompt = `I am building an app using the Oppal Design System.
+    const systemPrompt = `I am building an app using the Prism Design System.
 
 ## Design Tokens
 - Primary (Teal): #00af91 — buttons, active states, charts
@@ -270,7 +355,7 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
                 <section className="space-y-4">
                     <h2 className="text-xl font-bold text-neutral-900">AI Collaboration Guide</h2>
                     <p className="text-neutral-600">
-                        Maximize productivity by teaching Gemini or Claude about the Oppal Design System.
+                        Maximize productivity by teaching Gemini or Claude about the Prism Design System.
                         Follow these steps to ensure the AI generates on-brand, compatible code.
                     </p>
                 </section>
@@ -355,7 +440,7 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
                             <div className="mt-1"><Eye className="w-4 h-4 text-primary-500" /></div>
                             <div>
                                 <p className="text-sm font-semibold text-neutral-900">Visual Checks</p>
-                                <p className="text-xs text-neutral-500">Ask the AI to "Check this for Oppal compliance" after an edit.</p>
+                                <p className="text-xs text-neutral-500">Ask the AI to "Check this for Prism compliance" after an edit.</p>
                             </div>
                         </div>
                         <div className="flex gap-3">
@@ -461,7 +546,7 @@ function ComponentGallery() {
                         { header: 'Last Updated', key: 'updated', align: 'right' },
                     ]}
                     data={[
-                        { name: 'Oppal UI', status: 'Active', updated: '2 mins ago' },
+                        { name: 'Prism UI', status: 'Active', updated: '2 mins ago' },
                         { name: 'SupplyChain Pro', status: 'Draft', updated: '1 hour ago' },
                         { name: 'Finance Dashboard', status: 'Archived', updated: '3 days ago' },
                     ]}
@@ -531,7 +616,7 @@ function DeployWizard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
                 <h2 className="text-xl font-bold text-neutral-900">Deploy to New Project</h2>
-                <p className="text-neutral-600">Apply the Oppal Design System to your existing projects using our CLI tool.</p>
+                <p className="text-neutral-600">Apply the Prism Design System to your existing projects using our CLI tool.</p>
 
                 <div className="space-y-4">
                     <div className="bg-neutral-900 rounded-lg p-4 font-mono text-sm text-neutral-300">
@@ -1118,8 +1203,8 @@ function IconBrowser() {
                             key={cat}
                             onClick={() => setSelectedCategory(cat)}
                             className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${selectedCategory === cat
-                                    ? 'bg-primary-500 text-white'
-                                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                                ? 'bg-primary-500 text-white'
+                                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
                                 }`}
                         >
                             {cat === 'all' ? 'All' : cat}
@@ -1142,8 +1227,8 @@ function IconBrowser() {
                             key={icon.name}
                             onClick={() => copyImport(icon.name)}
                             className={`group flex flex-col items-center justify-center p-3 rounded-lg border transition-all ${copiedIcon === icon.name
-                                    ? 'border-primary-500 bg-primary-50'
-                                    : 'border-neutral-200 hover:border-primary-300 hover:bg-neutral-50'
+                                ? 'border-primary-500 bg-primary-50'
+                                : 'border-neutral-200 hover:border-primary-300 hover:bg-neutral-50'
                                 }`}
                             title={`Click to copy: import { ${icon.name} } from 'lucide-react'`}
                         >

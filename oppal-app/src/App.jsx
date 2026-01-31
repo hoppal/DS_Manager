@@ -8,6 +8,7 @@ import ContractsPage from './pages/ContractsPage';
 import ChatPage from './pages/ChatPage';
 import ManagerPage from './pages/ManagerPage';
 import BudgetOverview from './pages/BudgetOverview';
+import SettingsPage from './pages/SettingsPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/manager" element={<ManagerPage />} />
         <Route path="/budget" element={<BudgetOverview />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </DashboardLayout>
   );

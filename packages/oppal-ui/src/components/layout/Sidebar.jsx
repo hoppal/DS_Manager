@@ -60,7 +60,7 @@ export function Sidebar({ className = '' }) {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                     </div>
-                    <span className="text-xl font-bold text-neutral-900">Oppal DS Manager</span>
+                    <span className="text-xl font-bold text-neutral-900">Prism DS</span>
                 </div>
             </div>
 
@@ -99,10 +99,13 @@ export function Sidebar({ className = '' }) {
 
             {/* Settings */}
             <div className="p-4 border-t border-neutral-200">
-                <button className="flex items-center gap-3 w-full px-3 py-2 text-sm font-medium text-neutral-700 rounded-lg hover:bg-neutral-100 transition-colors">
+                <Link
+                    to="/settings"
+                    className="flex items-center gap-3 w-full px-3 py-2 text-sm font-medium text-neutral-700 rounded-lg hover:bg-neutral-100 transition-colors"
+                >
                     <Settings className="w-5 h-5" />
                     <span>Settings</span>
-                </button>
+                </Link>
             </div>
         </aside>
     );
@@ -122,7 +125,7 @@ export function MobileSidebar({ isOpen, onClose }) {
             {/* Sidebar Panel */}
             <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out">
                 <div className="flex items-center justify-between p-4 border-b border-neutral-200">
-                    <span className="text-xl font-bold text-neutral-900">Oppal</span>
+                    <span className="text-xl font-bold text-neutral-900">Prism DS</span>
                     <button onClick={onClose} className="p-2 text-neutral-500 hover:bg-neutral-100 rounded-md">
                         <X className="w-6 h-6" />
                     </button>
