@@ -144,84 +144,81 @@ export default function ManagerPage() {
     };
 
     const exportConfig = () => {
-        const config = {
-            name: "Prism Design System",
-            version: "1.0.0",
-            colors: {
-                primary: {
-                    50: "#e6f7f4",
-                    100: "#b3e6dd",
-                    200: "#80d5c6",
-                    300: "#4dc4af",
-                    400: "#1ab398",
-                    500: "#00af91",
-                    600: "#009c82",
-                    700: "#008973",
-                    800: "#007664",
-                    900: "#006355"
+        // Standard Tokens Studio Format (Simpler)
+        const tokens = {
+            "global": {
+                "colors": {
+                    "primary": {
+                        "50": { "value": "#e6f7f4" },
+                        "100": { "value": "#b3e6dd" },
+                        "200": { "value": "#80d5c6" },
+                        "300": { "value": "#4dc4af" },
+                        "400": { "value": "#1ab398" },
+                        "500": { "value": "#00af91" },
+                        "600": { "value": "#009c82" },
+                        "700": { "value": "#008973" },
+                        "800": { "value": "#007664" },
+                        "900": { "value": "#006355" }
+                    },
+                    "neutral": {
+                        "50": { "value": "#f9fafb" },
+                        "100": { "value": "#f3f4f6" },
+                        "200": { "value": "#e5e7eb" },
+                        "300": { "value": "#d1d5db" },
+                        "400": { "value": "#9ca3af" },
+                        "500": { "value": "#6b7280" },
+                        "600": { "value": "#4b5563" },
+                        "700": { "value": "#374151" },
+                        "800": { "value": "#1f2937" },
+                        "900": { "value": "#111827" }
+                    },
+                    "success": { "value": "#10b981" },
+                    "warning": { "value": "#f59e0b" },
+                    "danger": { "value": "#ef4444" },
+                    "info": { "value": "#3b82f6" }
                 },
-                neutral: {
-                    50: "#f9fafb",
-                    100: "#f3f4f6",
-                    200: "#e5e7eb",
-                    300: "#d1d5db",
-                    400: "#9ca3af",
-                    500: "#6b7280",
-                    600: "#4b5563",
-                    700: "#374151",
-                    800: "#1f2937",
-                    900: "#111827"
+                "fontFamilies": {
+                    "sans": { "value": "Inter" }
                 },
-                success: "#10b981",
-                warning: "#f59e0b",
-                danger: "#ef4444",
-                info: "#3b82f6"
-            },
-            typography: {
-                fontFamily: "'Inter', system-ui, sans-serif",
-                weights: {
-                    normal: 400,
-                    medium: 500,
-                    semibold: 600,
-                    bold: 700,
-                    extrabold: 800
+                "fontWeights": {
+                    "normal": { "value": "400" },
+                    "medium": { "value": "500" },
+                    "semibold": { "value": "600" },
+                    "bold": { "value": "700" },
+                    "extrabold": { "value": "800" }
                 },
-                sizes: {
-                    xs: "0.75rem",
-                    sm: "0.875rem",
-                    base: "1rem",
-                    lg: "1.125rem",
-                    xl: "1.25rem",
-                    "2xl": "1.5rem",
-                    "3xl": "1.875rem",
-                    "4xl": "2.25rem"
+                "fontSizes": {
+                    "xs": { "value": "0.75rem" },
+                    "sm": { "value": "0.875rem" },
+                    "base": { "value": "1rem" },
+                    "lg": { "value": "1.125rem" },
+                    "xl": { "value": "1.25rem" },
+                    "2xl": { "value": "1.5rem" },
+                    "3xl": { "value": "1.875rem" },
+                    "4xl": { "value": "2.25rem" }
+                },
+                "spacing": {
+                    "base": { "value": "4px" },
+                    "1": { "value": "4px" },
+                    "2": { "value": "8px" },
+                    "3": { "value": "12px" },
+                    "4": { "value": "16px" },
+                    "6": { "value": "24px" },
+                    "8": { "value": "32px" },
+                    "12": { "value": "48px" },
+                    "16": { "value": "64px" },
+                    "24": { "value": "96px" },
+                    "32": { "value": "128px" }
                 }
-            },
-            spacing: {
-                grid: "4px",
-                values: [4, 8, 12, 16, 24, 32, 48, 64, 96, 128]
-            },
-            components: [
-                "Button",
-                "Card",
-                "StatCard",
-                "DataTable",
-                "Alert",
-                "Input",
-                "DonutChart",
-                "MiniBarChart",
-                "DashboardLayout",
-                "Sidebar"
-            ],
-            exportedAt: new Date().toISOString()
+            }
         };
 
-        const dataStr = JSON.stringify(config, null, 2);
+        const dataStr = JSON.stringify(tokens, null, 2);
         const dataBlob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(dataBlob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'prism-ds-config.json';
+        link.download = 'prism-tokens.json';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
