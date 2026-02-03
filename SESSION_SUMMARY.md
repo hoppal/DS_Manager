@@ -39,6 +39,12 @@
 - ✅ `QUICK_REFERENCE.md` - Essential commands (7.5KB)
 - ✅ Updated `TASKS.md` with current status
 
+### 6. **Established Figma Bi-Directional Workflow**
+- ✅ **Code → Figma (Tokens)**: Updated export to standardized `prism-tokens.json` for Tokens Studio integration
+- ✅ **Code → Figma (Components)**: Created `scripts/generate_figma_components.js` to draw components via Figma Scripter
+- ✅ **Validation**: Added `scripts/verify_export.js` to ensure JSON compliance
+- ✅ **Live**: Deployed updated export logic to production
+
 ---
 
 ## 📊 Final Project Status

@@ -187,7 +187,10 @@ export default function ManagerPage() {
 
     const resetAllTypography = () => setTokenTypography(defaultTypography);
 
-    // Dynamic Font Loader
+    const [tokenRadius, setTokenRadius] = useState(8);
+    const [tokenSpacing, setTokenSpacing] = useState(24);
+
+    // Dynamic Font & Color & Layout Loader
     React.useEffect(() => {
         const families = [...new Set(tokenTypography.map(t => t.family))];
         const linkId = 'google-fonts-loader';
@@ -202,7 +205,25 @@ export default function ManagerPage() {
 
         const fontString = families.map(f => `family=${f.replace(/\s+/g, '+')}:wght@400;500;600;700;800`).join('&');
         link.href = `https://fonts.googleapis.com/css2?${fontString}&display=swap`;
-    }, [tokenTypography]);
+
+        // Apply to CSS Variables for Global Sync
+        const root = document.documentElement;
+        tokenTypography.forEach(t => {
+            root.style.setProperty(`--font-${t.id}`, `'${t.family}', sans-serif`);
+        });
+
+        // Sync colors
+        const primary = tokenColors.find(c => c.key === 'primary');
+        if (primary) {
+            root.style.setProperty('--color-primary-500', primary.hex);
+            root.style.setProperty('--color-primary-600', primary.hex);
+        }
+
+        // Sync Layout
+        root.style.setProperty('--radius-base', `${tokenRadius}px`);
+        root.style.setProperty('--spacing-base', `${tokenSpacing}px`);
+
+    }, [tokenTypography, tokenColors, tokenRadius, tokenSpacing]);
 
     const exportConfig = () => {
         // Map current colors to the tokens object
@@ -253,17 +274,22 @@ export default function ManagerPage() {
                     "4xl": { "value": "2.25rem" }
                 },
                 "spacing": {
-                    "base": { "value": "4px" },
-                    "1": { "value": "4px" },
-                    "2": { "value": "8px" },
-                    "3": { "value": "12px" },
-                    "4": { "value": "16px" },
-                    "6": { "value": "24px" },
-                    "8": { "value": "32px" },
-                    "12": { "value": "48px" },
-                    "16": { "value": "64px" },
-                    "24": { "value": "96px" },
-                    "32": { "value": "128px" }
+                    "base": { "value": `${tokenSpacing / 4}px` },
+                    "1": { "value": `${tokenSpacing / 4}px` },
+                    "2": { "value": `${tokenSpacing / 2}px` },
+                    "3": { "value": `${tokenSpacing * 0.75}px` },
+                    "4": { "value": `${tokenSpacing}px` },
+                    "6": { "value": `${tokenSpacing * 1.5}px` },
+                    "8": { "value": `${tokenSpacing * 2}px` },
+                    "12": { "value": `${tokenSpacing * 3}px` },
+                    "16": { "value": `${tokenSpacing * 4}px` },
+                    "24": { "value": `${tokenSpacing * 6}px` },
+                    "32": { "value": `${tokenSpacing * 8}px` }
+                },
+                "borderRadius": {
+                    "base": { "value": `${tokenRadius}px` },
+                    "lg": { "value": `${tokenRadius}px` },
+                    "xl": { "value": `${tokenRadius * 1.5}px` }
                 }
             }
         };
@@ -336,6 +362,10 @@ export default function ManagerPage() {
                         updateColor={updateColor}
                         resetColor={resetColor}
                         resetAll={resetAllColors}
+                        radius={tokenRadius}
+                        setRadius={setTokenRadius}
+                        spacing={tokenSpacing}
+                        setSpacing={setTokenSpacing}
                     />
                 )}
                 {activeTab === 'typography' && (
@@ -622,73 +652,145 @@ function ComponentGallery() {
     );
 }
 
-function TokensManager({ colors, updateColor, resetColor, resetAll }) {
+function TokensManager({ colors, updateColor, resetColor, resetAll, radius, setRadius, spacing, setSpacing }) {
     return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-                <div>
-                    <CardTitle>Color Palette</CardTitle>
-                    <p className="text-sm text-neutral-500 mt-1">Click a color to customize it or type the hex code manually.</p>
-                </div>
-                {colors.some(c => c.isCustom) && (
-                    <Button variant="ghost" size="sm" onClick={resetAll}>
-                        Reset All
-                    </Button>
-                )}
-            </CardHeader>
-            <CardContent>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-                    {colors.map((color, index) => (
-                        <div key={color.name} className="space-y-3">
-                            <div className="relative group">
-                                <div
-                                    className={`aspect-square rounded-2xl shadow-inner cursor-pointer transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg ${!color.isCustom ? color.class : ''}`}
-                                    style={color.isCustom ? { backgroundColor: color.hex } : {}}
-                                    onClick={() => document.getElementById(`color-picker-${index}`).click()}
-                                />
-                                <input
-                                    id={`color-picker-${index}`}
-                                    type="color"
-                                    value={color.hex}
-                                    onChange={(e) => updateColor(index, e.target.value)}
-                                    className="absolute inset-0 w-full h-full opacity-0 invisible"
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                                    <div className="bg-white/90 p-2 rounded-xl shadow-xl backdrop-blur-sm border border-white/20">
-                                        <Edit className="w-5 h-5 text-neutral-800" />
-                                    </div>
-                                </div>
-                                {color.isCustom && (
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); resetColor(index); }}
-                                        className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full shadow-md border border-neutral-100 flex items-center justify-center hover:bg-neutral-50 transition-colors z-10"
-                                        title="Reset to default"
-                                    >
-                                        <RotateCcw className="w-3 h-3 text-neutral-500" />
-                                    </button>
-                                )}
-                            </div>
-                            <div className="space-y-1.5 px-1">
-                                <p className="text-sm font-bold text-neutral-900">{color.name}</p>
-                                <div className="flex items-center gap-2">
-                                    <div className="relative flex-1">
-                                        <input
-                                            type="text"
-                                            value={color.hex}
-                                            onChange={(e) => updateColor(index, e.target.value)}
-                                            className="w-full text-[10px] text-neutral-600 font-mono uppercase tracking-widest bg-neutral-50 border border-neutral-200 rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition-all"
-                                        />
+        <div className="space-y-8">
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>Color Palette</CardTitle>
+                        <p className="text-sm text-neutral-500 mt-1">Click a color to customize it or type the hex code manually.</p>
+                    </div>
+                    {colors.some(c => c.isCustom) && (
+                        <Button variant="ghost" size="sm" onClick={resetAll}>
+                            Reset All
+                        </Button>
+                    )}
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+                        {colors.map((color, index) => (
+                            <div key={color.name} className="space-y-3">
+                                <div className="relative group">
+                                    <div
+                                        className={`aspect-square rounded-2xl shadow-inner cursor-pointer transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg ${!color.isCustom ? color.class : ''}`}
+                                        style={color.isCustom ? { backgroundColor: color.hex } : {}}
+                                        onClick={() => document.getElementById(`color-picker-${index}`).click()}
+                                    />
+                                    <input
+                                        id={`color-picker-${index}`}
+                                        type="color"
+                                        value={color.hex}
+                                        onChange={(e) => updateColor(index, e.target.value)}
+                                        className="absolute inset-0 w-full h-full opacity-0 invisible"
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                        <div className="bg-white/90 p-2 rounded-xl shadow-xl backdrop-blur-sm border border-white/20">
+                                            <Edit className="w-5 h-5 text-neutral-800" />
+                                        </div>
                                     </div>
                                     {color.isCustom && (
-                                        <div className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" title="Customized" />
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); resetColor(index); }}
+                                            className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full shadow-md border border-neutral-100 flex items-center justify-center hover:bg-neutral-50 transition-colors z-10"
+                                            title="Reset to default"
+                                        >
+                                            <RotateCcw className="w-3 h-3 text-neutral-500" />
+                                        </button>
                                     )}
                                 </div>
+                                <div className="space-y-1.5 px-1">
+                                    <p className="text-sm font-bold text-neutral-900">{color.name}</p>
+                                    <div className="flex items-center gap-2">
+                                        <div className="relative flex-1">
+                                            <input
+                                                type="text"
+                                                value={color.hex}
+                                                onChange={(e) => updateColor(index, e.target.value)}
+                                                className="w-full text-[10px] text-neutral-600 font-mono uppercase tracking-widest bg-neutral-50 border border-neutral-200 rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                                            />
+                                        </div>
+                                        {color.isCustom && (
+                                            <div className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" title="Customized" />
+                                        )}
+                                    </div>
+                                </div>
                             </div>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Border Radius</CardTitle>
+                        <p className="text-sm text-neutral-500 mt-1">Adjust the global corner roundness for all components.</p>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <div className="flex items-center justify-between text-sm">
+                            <span className="font-medium text-neutral-700">Corner Radius</span>
+                            <span className="bg-primary-50 text-primary-700 px-2 py-1 rounded font-mono text-xs">{radius}px</span>
                         </div>
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
+                        <input
+                            type="range"
+                            min="0"
+                            max="32"
+                            value={radius}
+                            onChange={(e) => setRadius(parseInt(e.target.value))}
+                            className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-500"
+                        />
+                        <div className="grid grid-cols-3 gap-4 pt-4">
+                            {[0, 8, 16].map(val => (
+                                <button
+                                    key={val}
+                                    onClick={() => setRadius(val)}
+                                    className={`py-6 border-2 rounded-xl transition-all flex items-center justify-center font-medium text-xs ${radius === val ? 'border-primary-500 bg-primary-50 text-primary-700' : 'border-neutral-100 bg-white text-neutral-400 hover:border-neutral-200'}`}
+                                >
+                                    {val === 0 ? 'Sharp' : val === 8 ? 'Default' : 'Round'}
+                                </button>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Base Spacing</CardTitle>
+                        <p className="text-sm text-neutral-500 mt-1">Control the padding and gaps between UI elements.</p>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <div className="flex items-center justify-between text-sm">
+                            <span className="font-medium text-neutral-700">Internal Padding</span>
+                            <span className="bg-primary-50 text-primary-700 px-2 py-1 rounded font-mono text-xs">{spacing}px</span>
+                        </div>
+                        <input
+                            type="range"
+                            min="8"
+                            max="48"
+                            value={spacing}
+                            onChange={(e) => setSpacing(parseInt(e.target.value))}
+                            className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-500"
+                        />
+                        <div className="grid grid-cols-3 gap-4 pt-4">
+                            {[12, 24, 36].map(val => (
+                                <button
+                                    key={val}
+                                    onClick={() => setSpacing(val)}
+                                    className={`py-3 border-2 rounded-xl transition-all flex flex-col items-center justify-center font-medium text-xs ${spacing === val ? 'border-primary-500 bg-primary-50 text-primary-700' : 'border-neutral-100 bg-white text-neutral-400 hover:border-neutral-200'}`}
+                                >
+                                    <div className="flex gap-1 mb-1">
+                                        <div className="w-1 h-3 bg-current rounded-full" />
+                                        <div className="w-1 h-3 bg-current rounded-full" />
+                                    </div>
+                                    {val === 12 ? 'Compact' : val === 24 ? 'Cozy' : 'Spacious'}
+                                </button>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
     );
 }
 
