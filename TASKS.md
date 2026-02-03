@@ -1,6 +1,6 @@
 # Oppal Design System - Tasks
 
-**Last Updated**: January 31, 2026  
+**Last Updated**: February 3, 2026  
 **Status**: ✅ Production Ready
 
 ---
@@ -87,7 +87,8 @@
 
 ### Phase 2: Enhanced Tools (Next Quarter)
 - [ ] **Component Registry** - Searchable library with live previews and API docs
-- [ ] **Theme Editor** - Visual design token editing with live preview
+- [x] **Theme Editor** - Visual design token editing with live preview (Color palette customization)
+- [ ] **Typography Editor** - Visual typography token editing (Future)
 - [ ] **Snippet Generator** - Natural language to component code
 - [ ] **VS Code Extension** - Design system snippets and autocomplete
 
@@ -97,8 +98,10 @@
 - [ ] **Design Linter** - AI-powered design consistency checker
 - [ ] **Accessibility Scanner** - AI-powered a11y recommendations
 
-### Phase 4: Collaboration (Future)
-- [ ] **Figma Plugin** - Sync design tokens with Figma
+### Phase 4: Collaboration (In Progress)
+- [x] **Figma Token Export** - Generate `prism-tokens.json` for Tokens Studio
+- [x] **Figma Component Script** - `generate_figma_components.js` for Scripter
+- [ ] **Figma Plugin** - Full sync plugin (Future)
 - [ ] **Design Review Tool** - Collaborative design feedback
 - [ ] **Component Changelog** - Version history and migration guides
 - [ ] **Community Templates** - User-contributed patterns

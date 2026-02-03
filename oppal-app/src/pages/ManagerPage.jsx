@@ -143,42 +143,97 @@ export default function ManagerPage() {
         setTimeout(() => setCopied(false), 2000);
     };
 
+    const defaultColors = [
+        { name: 'Primary', class: 'bg-primary-500', hex: '#00af91', key: 'primary' },
+        { name: 'Teal', class: 'bg-teal-500', hex: '#009b9b', key: 'teal' },
+        { name: 'Success', class: 'bg-success-500', hex: '#22c55e', key: 'success' },
+        { name: 'Warning', class: 'bg-warning-500', hex: '#f97316', key: 'warning' },
+        { name: 'Error', class: 'bg-error-500', hex: '#ef4444', key: 'danger' },
+        { name: 'Neutral', class: 'bg-neutral-500', hex: '#6b7280', key: 'neutral' },
+    ];
+
+    const [tokenColors, setTokenColors] = useState(defaultColors);
+
+    const updateColor = (index, newHex) => {
+        const newColors = [...tokenColors];
+        newColors[index] = { ...newColors[index], hex: newHex, isCustom: true };
+        setTokenColors(newColors);
+    };
+
+    const resetColor = (index) => {
+        const newColors = [...tokenColors];
+        newColors[index] = { ...defaultColors[index], isCustom: false };
+        setTokenColors(newColors);
+    };
+
+    const resetAllColors = () => setTokenColors(defaultColors);
+
+    const defaultTypography = [
+        { id: 'h1', name: 'Heading 1', family: 'Inter', size: '2.25rem', weight: '800', description: 'Primary page titles' },
+        { id: 'h2', name: 'Heading 2', family: 'Inter', size: '1.5rem', weight: '700', description: 'Section headers' },
+        { id: 'body', name: 'Body Text', family: 'Inter', size: '1rem', weight: '400', description: 'Default paragraph text' },
+    ];
+
+    const [tokenTypography, setTokenTypography] = useState(defaultTypography);
+
+    const updateTypography = (id, updates) => {
+        setTokenTypography(prev => prev.map(t => t.id === id ? { ...t, ...updates, isCustom: true } : t));
+    };
+
+    const resetTypography = (id) => {
+        const original = defaultTypography.find(t => t.id === id);
+        setTokenTypography(prev => prev.map(t => t.id === id ? { ...original, isCustom: false } : t));
+    };
+
+    const resetAllTypography = () => setTokenTypography(defaultTypography);
+
+    // Dynamic Font Loader
+    React.useEffect(() => {
+        const families = [...new Set(tokenTypography.map(t => t.family))];
+        const linkId = 'google-fonts-loader';
+        let link = document.getElementById(linkId);
+
+        if (!link) {
+            link = document.createElement('link');
+            link.id = linkId;
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+        }
+
+        const fontString = families.map(f => `family=${f.replace(/\s+/g, '+')}:wght@400;500;600;700;800`).join('&');
+        link.href = `https://fonts.googleapis.com/css2?${fontString}&display=swap`;
+    }, [tokenTypography]);
+
     const exportConfig = () => {
-        // Standard Tokens Studio Format (Simpler)
+        // Map current colors to the tokens object
+        const colorTokens = {};
+        tokenColors.forEach(c => {
+            if (c.key === 'primary' || c.key === 'neutral') {
+                colorTokens[c.key] = { "500": { "value": c.hex } };
+            } else {
+                colorTokens[c.key] = { "value": c.hex };
+            }
+        });
+
+        // Map typography
+        const typoTokens = {};
+        tokenTypography.forEach(t => {
+            typoTokens[t.id] = {
+                "fontFamily": { "value": t.family },
+                "fontSize": { "value": t.size },
+                "fontWeight": { "value": t.weight }
+            };
+        });
+
         const tokens = {
             "global": {
                 "colors": {
-                    "primary": {
-                        "50": { "value": "#e6f7f4" },
-                        "100": { "value": "#b3e6dd" },
-                        "200": { "value": "#80d5c6" },
-                        "300": { "value": "#4dc4af" },
-                        "400": { "value": "#1ab398" },
-                        "500": { "value": "#00af91" },
-                        "600": { "value": "#009c82" },
-                        "700": { "value": "#008973" },
-                        "800": { "value": "#007664" },
-                        "900": { "value": "#006355" }
-                    },
-                    "neutral": {
-                        "50": { "value": "#f9fafb" },
-                        "100": { "value": "#f3f4f6" },
-                        "200": { "value": "#e5e7eb" },
-                        "300": { "value": "#d1d5db" },
-                        "400": { "value": "#9ca3af" },
-                        "500": { "value": "#6b7280" },
-                        "600": { "value": "#4b5563" },
-                        "700": { "value": "#374151" },
-                        "800": { "value": "#1f2937" },
-                        "900": { "value": "#111827" }
-                    },
-                    "success": { "value": "#10b981" },
-                    "warning": { "value": "#f59e0b" },
-                    "danger": { "value": "#ef4444" },
+                    ...colorTokens,
                     "info": { "value": "#3b82f6" }
                 },
+                "typography": typoTokens,
                 "fontFamilies": {
-                    "sans": { "value": "Inter" }
+                    "sans": { "value": tokenTypography.find(t => t.id === 'body')?.family || "Inter" }
                 },
                 "fontWeights": {
                     "normal": { "value": "400" },
@@ -275,8 +330,22 @@ export default function ManagerPage() {
                 {activeTab === 'gallery' && <ComponentGallery />}
                 {activeTab === 'patterns' && <PatternLibrary />}
                 {activeTab === 'icons' && <IconBrowser />}
-                {activeTab === 'tokens' && <TokensManager />}
-                {activeTab === 'typography' && <TypographyManager />}
+                {activeTab === 'tokens' && (
+                    <TokensManager
+                        colors={tokenColors}
+                        updateColor={updateColor}
+                        resetColor={resetColor}
+                        resetAll={resetAllColors}
+                    />
+                )}
+                {activeTab === 'typography' && (
+                    <TypographyManager
+                        typography={tokenTypography}
+                        updateTypography={updateTypography}
+                        resetTypography={resetTypography}
+                        resetAll={resetAllTypography}
+                    />
+                )}
                 {activeTab === 'deploy' && <DeployWizard />}
                 {activeTab === 'usage' && <UsageGuide />}
             </div>
@@ -553,29 +622,67 @@ function ComponentGallery() {
     );
 }
 
-function TokensManager() {
-    const colors = [
-        { name: 'Primary', class: 'bg-primary-500', hex: '#00af91' },
-        { name: 'Teal', class: 'bg-teal-500', hex: '#009b9b' },
-        { name: 'Success', class: 'bg-success-500', hex: '#22c55e' },
-        { name: 'Warning', class: 'bg-warning-500', hex: '#f97316' },
-        { name: 'Error', class: 'bg-error-500', hex: '#ef4444' },
-        { name: 'Neutral', class: 'bg-neutral-500', hex: '#adb5bd' },
-    ];
-
+function TokensManager({ colors, updateColor, resetColor, resetAll }) {
     return (
         <Card>
-            <CardHeader>
-                <CardTitle>Color Palette</CardTitle>
+            <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                    <CardTitle>Color Palette</CardTitle>
+                    <p className="text-sm text-neutral-500 mt-1">Click a color to customize it or type the hex code manually.</p>
+                </div>
+                {colors.some(c => c.isCustom) && (
+                    <Button variant="ghost" size="sm" onClick={resetAll}>
+                        Reset All
+                    </Button>
+                )}
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-                    {colors.map((color) => (
+                    {colors.map((color, index) => (
                         <div key={color.name} className="space-y-3">
-                            <div className={`aspect-square rounded-xl shadow-inner ${color.class}`} />
-                            <div>
-                                <p className="text-sm font-semibold text-neutral-900">{color.name}</p>
-                                <p className="text-xs text-neutral-500 font-mono uppercase">{color.hex}</p>
+                            <div className="relative group">
+                                <div
+                                    className={`aspect-square rounded-2xl shadow-inner cursor-pointer transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg ${!color.isCustom ? color.class : ''}`}
+                                    style={color.isCustom ? { backgroundColor: color.hex } : {}}
+                                    onClick={() => document.getElementById(`color-picker-${index}`).click()}
+                                />
+                                <input
+                                    id={`color-picker-${index}`}
+                                    type="color"
+                                    value={color.hex}
+                                    onChange={(e) => updateColor(index, e.target.value)}
+                                    className="absolute inset-0 w-full h-full opacity-0 invisible"
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                    <div className="bg-white/90 p-2 rounded-xl shadow-xl backdrop-blur-sm border border-white/20">
+                                        <Edit className="w-5 h-5 text-neutral-800" />
+                                    </div>
+                                </div>
+                                {color.isCustom && (
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); resetColor(index); }}
+                                        className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full shadow-md border border-neutral-100 flex items-center justify-center hover:bg-neutral-50 transition-colors z-10"
+                                        title="Reset to default"
+                                    >
+                                        <RotateCcw className="w-3 h-3 text-neutral-500" />
+                                    </button>
+                                )}
+                            </div>
+                            <div className="space-y-1.5 px-1">
+                                <p className="text-sm font-bold text-neutral-900">{color.name}</p>
+                                <div className="flex items-center gap-2">
+                                    <div className="relative flex-1">
+                                        <input
+                                            type="text"
+                                            value={color.hex}
+                                            onChange={(e) => updateColor(index, e.target.value)}
+                                            className="w-full text-[10px] text-neutral-600 font-mono uppercase tracking-widest bg-neutral-50 border border-neutral-200 rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                                        />
+                                    </div>
+                                    {color.isCustom && (
+                                        <div className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" title="Customized" />
+                                    )}
+                                </div>
                             </div>
                         </div>
                     ))}
@@ -585,26 +692,94 @@ function TokensManager() {
     );
 }
 
-function TypographyManager() {
+function TypographyManager({ typography, updateTypography, resetTypography, resetAll }) {
+    const googleFonts = [
+        'Inter', 'Roboto', 'Open Sans', 'Lato', 'Poppins', 'Montserrat',
+        'Playfair Display', 'Merriweather', 'Lora', 'Oswald',
+        'JetBrains Mono', 'Fira Code', 'Space Grotesk', 'Outfit', 'Plus Jakarta Sans'
+    ].sort();
+
     return (
-        <Card>
-            <CardContent className="divide-y divide-neutral-100">
-                <div className="py-6 first:pt-0">
-                    <p className="text-xs text-neutral-500 font-mono mb-4">Font: Inter / 2.25rem / Extrabold</p>
-                    <h1 className="text-4xl font-extrabold text-neutral-900">Sphinx of black quartz, judge my vow.</h1>
+        <div className="space-y-6">
+            <div className="flex items-center justify-between mb-2">
+                <div>
+                    <h2 className="text-xl font-bold text-neutral-900">Typography System</h2>
+                    <p className="text-sm text-neutral-500">Configure font families for different text levels.</p>
                 </div>
-                <div className="py-6">
-                    <p className="text-xs text-neutral-500 font-mono mb-4">Font: Inter / 1.5rem / Bold</p>
-                    <h2 className="text-2xl font-bold text-neutral-900">Pack my box with five dozen liquor jugs.</h2>
-                </div>
-                <div className="py-6">
-                    <p className="text-xs text-neutral-500 font-mono mb-4">Font: Inter / 1rem / Regular</p>
-                    <p className="text-base text-neutral-700">
-                        The quick brown fox jumps over the lazy dog. Designers use this text to see how their typography looks in real-world scenarios. It helps in assessing spacing, weight, and readability.
-                    </p>
-                </div>
-            </CardContent>
-        </Card>
+                {typography.some(t => t.isCustom) && (
+                    <Button variant="ghost" size="sm" onClick={resetAll}>
+                        <RotateCcw className="w-3.5 h-3.5 mr-2" />
+                        Reset All
+                    </Button>
+                )}
+            </div>
+
+            <div className="grid grid-cols-1 gap-6">
+                {typography.map((typo) => (
+                    <Card key={typo.id} className="overflow-hidden border-neutral-200">
+                        <CardHeader className="bg-neutral-50/50 border-b border-neutral-100 py-4">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <CardTitle className="text-lg">{typo.name}</CardTitle>
+                                        {typo.isCustom && (
+                                            <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
+                                        )}
+                                    </div>
+                                    <p className="text-xs text-neutral-500 uppercase tracking-wider font-medium">{typo.description}</p>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <div className="relative">
+                                        <select
+                                            value={typo.family}
+                                            onChange={(e) => updateTypography(typo.id, { family: e.target.value })}
+                                            className="appearance-none bg-white border border-neutral-200 rounded-lg pl-3 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all font-medium min-w-[180px]"
+                                        >
+                                            {googleFonts.map(font => (
+                                                <option key={font} value={font}>{font}</option>
+                                            ))}
+                                        </select>
+                                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
+                                    </div>
+                                    {typo.isCustom && (
+                                        <button
+                                            onClick={() => resetTypography(typo.id)}
+                                            className="p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-lg transition-colors"
+                                            title="Reset to default"
+                                        >
+                                            <RotateCcw className="w-4 h-4" />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="p-8">
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-4 text-xs font-mono text-neutral-400 border-b border-neutral-50 pb-2">
+                                    <span>Family: {typo.family}</span>
+                                    <span>Size: {typo.size}</span>
+                                    <span>Weight: {typo.weight}</span>
+                                </div>
+                                <p
+                                    style={{
+                                        fontFamily: `'${typo.family}', sans-serif`,
+                                        fontSize: typo.size,
+                                        fontWeight: typo.weight,
+                                        lineHeight: 1.2
+                                    }}
+                                    className="text-neutral-900"
+                                >
+                                    {typo.id === 'body'
+                                        ? 'The quick brown fox jumps over the lazy dog. Designers use this text to see how their typography looks in real-world scenarios. It helps in assessing spacing, weight, and readability.'
+                                        : 'Sphinx of black quartz, judge my vow.'
+                                    }
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+        </div>
     );
 }
 
