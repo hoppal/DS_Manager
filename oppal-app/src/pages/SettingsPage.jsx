@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardHeader, CardTitle, CardContent, Button, Input, Alert } from '@oppal/ui';
+import { Card, CardHeader, CardTitle, CardContent, Button, Input, Alert } from '@prism/ui';
 import { Save, User, Bell, Palette, Shield, Download } from 'lucide-react';
 
 export default function SettingsPage() {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from '@oppal/ui';
+import { Button } from '@prism/ui';
 import { Send, Bot, User } from 'lucide-react';
 
 const initialMessages = [

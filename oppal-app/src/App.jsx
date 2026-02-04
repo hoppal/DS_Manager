@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { DashboardLayout } from '@oppal/ui';
+import { DashboardLayout } from '@prism/ui';
 import SpendPage from './pages/SpendPage';
 import CockpitPage from './pages/CockpitPage';
 import RisksPage from './pages/RisksPage';

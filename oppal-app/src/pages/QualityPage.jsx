@@ -1,4 +1,4 @@
-import { StatCard, DataTable, DonutChart } from '@oppal/ui';
+import { StatCard, DataTable, DonutChart } from '@prism/ui';
 import { CheckCircle, XCircle, Clock } from 'lucide-react';
 
 const qualityData = [

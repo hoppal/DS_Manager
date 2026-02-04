@@ -12,7 +12,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@oppal/ui": "file:../packages/oppal-ui",
+    "@prism/ui": "file:../packages/oppal-ui",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

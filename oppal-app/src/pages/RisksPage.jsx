@@ -1,4 +1,4 @@
-import { DataTable, Alert, StatCard } from '@oppal/ui';
+import { DataTable, Alert, StatCard } from '@prism/ui';
 import { AlertTriangle, ShieldAlert, ShieldCheck } from 'lucide-react';
 
 const riskData = [

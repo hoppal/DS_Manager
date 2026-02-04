@@ -8,7 +8,7 @@ import {
     DonutChart,
     Alert,
     Button
-} from '@oppal/ui';
+} from '@prism/ui';
 import { TrendingUp, Download, RefreshCw } from 'lucide-react';
 
 /**

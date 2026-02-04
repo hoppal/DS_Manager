@@ -10,7 +10,7 @@ import {
     Alert,
     Input,
     DonutChart
-} from '@oppal/ui';
+} from '@prism/ui';
 import {
     Settings,
     Eye,
@@ -28,110 +28,10 @@ import {
     Clipboard,
     Search,
     Grid,
-    // Common icons for Icon Browser
-    Home,
-    User,
-    Users,
-    Mail,
-    Phone,
-    Calendar,
-    Clock,
-    Bell,
-    Star,
-    Heart,
-    Bookmark,
-    Tag,
-    Filter,
-    SlidersHorizontal,
-    RefreshCw,
     RotateCcw,
-    Upload,
-    File,
-    FileText,
-    Folder,
-    Image,
-    Video,
-    Music,
-    Link,
-    Share,
-    Send,
-    MessageSquare,
-    Edit,
-    Trash2,
-    Plus,
-    Minus,
-    X,
-    ChevronDown,
-    ChevronUp,
-    ChevronLeft,
-    ChevronRight,
-    ArrowUp,
-    ArrowDown,
-    ArrowLeft,
-    ArrowRight,
-    TrendingUp,
-    TrendingDown,
-    BarChart2,
-    PieChart,
-    Activity,
-    Zap,
-    Shield,
-    Lock,
-    Unlock,
-    Key,
-    Globe,
-    Map,
-    MapPin,
-    Navigation,
-    Compass,
-    Sun,
-    Moon,
-    Cloud,
-    Wifi,
-    Bluetooth,
-    Battery,
-    Power,
-    Cpu,
-    HardDrive,
-    Server,
-    Database,
-    AlertCircle,
-    AlertTriangle,
-    Info,
-    HelpCircle,
-    CheckCircle,
-    XCircle,
-    PlayCircle,
-    PauseCircle,
-    StopCircle,
-    SkipForward,
-    SkipBack,
-    Volume2,
-    VolumeX,
-    Maximize,
-    Minimize,
-    MoreHorizontal,
-    MoreVertical,
-    Menu,
-    Grip,
-    Move,
-    Package,
-    ShoppingCart,
-    CreditCard,
-    DollarSign,
-    Percent,
-    Receipt,
-    Truck,
-    Building,
-    Briefcase,
-    Award,
-    Target,
-    Flag,
-    Smile,
-    Frown,
-    ThumbsUp,
-    ThumbsDown
+    Edit
 } from 'lucide-react';
+import { ICON_CATEGORIES, ALL_ICONS } from '../constants/icons';
 
 export default function ManagerPage() {
     const [activeTab, setActiveTab] = useState('gallery');
@@ -155,9 +55,12 @@ export default function ManagerPage() {
     const [tokenColors, setTokenColors] = useState(defaultColors);
 
     const updateColor = (index, newHex) => {
-        const newColors = [...tokenColors];
-        newColors[index] = { ...newColors[index], hex: newHex, isCustom: true };
-        setTokenColors(newColors);
+        // Only update if it's a valid hex or starts with # for typing
+        if (/^#([0-9A-F]{3,6})$/i.test(newHex) || newHex === '#') {
+            const newColors = [...tokenColors];
+            newColors[index] = { ...newColors[index], hex: newHex, isCustom: true };
+            setTokenColors(newColors);
+        }
     };
 
     const resetColor = (index) => {
@@ -398,7 +301,7 @@ function UsageGuide() {
 - Metric values: text-4xl font-extrabold (800)
 - Labels: text-xs font-medium uppercase
 
-## Component Library: @oppal/ui
+## Component Library: @prism/ui
 Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarChart, DashboardLayout, Sidebar
 
 ## Key APIs
@@ -410,7 +313,7 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
 \`\`\`
 
 ## Rules
-1. Always use components from @oppal/ui
+1. Always use components from @prism/ui
 2. Cards: white bg, shadow-md, rounded-lg, p-6
 3. Tables: right-align numbers, uppercase headers
 4. Charts: teal (#00af91), no gridlines`;
@@ -426,7 +329,10 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
 
     const exportContext = async () => {
         try {
-            const response = await fetch('/.context/ai-context.md');
+            const baseUrl = import.meta.env.BASE_URL || '/';
+            const contextPath = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}.context/ai-context.md`;
+            const response = await fetch(contextPath);
+
             if (response.ok) {
                 const content = await response.text();
                 navigator.clipboard.writeText(content);
@@ -487,7 +393,7 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="text-sm text-neutral-600">
-                            Ask the AI to create components. It will use @oppal/ui and follow your brand automatically.
+                            Ask the AI to create components. It will use @prism/ui and follow your brand automatically.
                         </CardContent>
                     </Card>
                 </div>
@@ -1267,7 +1173,7 @@ function PatternLibrary() {
             <section className="space-y-4">
                 <h2 className="text-xl font-bold text-neutral-900">Pattern Library</h2>
                 <p className="text-neutral-600">
-                    Pre-built layout compositions using @oppal/ui components. Copy and customize for rapid development.
+                    Pre-built layout compositions using @prism/ui components. Copy and customize for rapid development.
                 </p>
             </section>
 
@@ -1315,7 +1221,7 @@ function PatternLibrary() {
             ))}
 
             <Alert variant="info">
-                These patterns use components from <code className="font-mono text-xs">@oppal/ui</code>.
+                These patterns use components from <code className="font-mono text-xs">@prism/ui</code>.
                 Make sure to import the required components before using.
             </Alert>
         </div>
@@ -1328,112 +1234,8 @@ function IconBrowser() {
     const [copiedIcon, setCopiedIcon] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('all');
 
-    const iconCategories = {
-        'Navigation': [
-            { name: 'Home', component: Home },
-            { name: 'Menu', component: Menu },
-            { name: 'Search', component: Search },
-            { name: 'ChevronDown', component: ChevronDown },
-            { name: 'ChevronUp', component: ChevronUp },
-            { name: 'ChevronLeft', component: ChevronLeft },
-            { name: 'ChevronRight', component: ChevronRight },
-            { name: 'ArrowUp', component: ArrowUp },
-            { name: 'ArrowDown', component: ArrowDown },
-            { name: 'ArrowLeft', component: ArrowLeft },
-            { name: 'ArrowRight', component: ArrowRight },
-            { name: 'ExternalLink', component: ExternalLink },
-        ],
-        'Actions': [
-            { name: 'Plus', component: Plus },
-            { name: 'Minus', component: Minus },
-            { name: 'X', component: X },
-            { name: 'Check', component: Check },
-            { name: 'Edit', component: Edit },
-            { name: 'Trash2', component: Trash2 },
-            { name: 'Copy', component: Copy },
-            { name: 'Download', component: Download },
-            { name: 'Upload', component: Upload },
-            { name: 'RefreshCw', component: RefreshCw },
-            { name: 'Settings', component: Settings },
-            { name: 'MoreHorizontal', component: MoreHorizontal },
-        ],
-        'Communication': [
-            { name: 'Mail', component: Mail },
-            { name: 'Phone', component: Phone },
-            { name: 'MessageSquare', component: MessageSquare },
-            { name: 'MessageCircle', component: MessageCircle },
-            { name: 'Send', component: Send },
-            { name: 'Share', component: Share },
-            { name: 'Bell', component: Bell },
-        ],
-        'Users': [
-            { name: 'User', component: User },
-            { name: 'Users', component: Users },
-            { name: 'Smile', component: Smile },
-            { name: 'Frown', component: Frown },
-            { name: 'ThumbsUp', component: ThumbsUp },
-            { name: 'ThumbsDown', component: ThumbsDown },
-        ],
-        'Status': [
-            { name: 'CheckCircle', component: CheckCircle },
-            { name: 'XCircle', component: XCircle },
-            { name: 'AlertCircle', component: AlertCircle },
-            { name: 'AlertTriangle', component: AlertTriangle },
-            { name: 'Info', component: Info },
-            { name: 'HelpCircle', component: HelpCircle },
-        ],
-        'Charts': [
-            { name: 'TrendingUp', component: TrendingUp },
-            { name: 'TrendingDown', component: TrendingDown },
-            { name: 'BarChart2', component: BarChart2 },
-            { name: 'PieChart', component: PieChart },
-            { name: 'Activity', component: Activity },
-            { name: 'Target', component: Target },
-        ],
-        'Files': [
-            { name: 'File', component: File },
-            { name: 'FileText', component: FileText },
-            { name: 'Folder', component: Folder },
-            { name: 'Image', component: Image },
-            { name: 'Video', component: Video },
-            { name: 'Link', component: Link },
-        ],
-        'Commerce': [
-            { name: 'ShoppingCart', component: ShoppingCart },
-            { name: 'CreditCard', component: CreditCard },
-            { name: 'DollarSign', component: DollarSign },
-            { name: 'Percent', component: Percent },
-            { name: 'Receipt', component: Receipt },
-            { name: 'Package', component: Package },
-            { name: 'Truck', component: Truck },
-        ],
-        'Security': [
-            { name: 'Lock', component: Lock },
-            { name: 'Unlock', component: Unlock },
-            { name: 'Shield', component: Shield },
-            { name: 'Key', component: Key },
-            { name: 'Eye', component: Eye },
-        ],
-        'Date & Time': [
-            { name: 'Calendar', component: Calendar },
-            { name: 'Clock', component: Clock },
-        ],
-        'Misc': [
-            { name: 'Star', component: Star },
-            { name: 'Heart', component: Heart },
-            { name: 'Bookmark', component: Bookmark },
-            { name: 'Tag', component: Tag },
-            { name: 'Flag', component: Flag },
-            { name: 'Award', component: Award },
-            { name: 'Zap', component: Zap },
-            { name: 'Globe', component: Globe },
-            { name: 'MapPin', component: MapPin },
-            { name: 'Building', component: Building },
-            { name: 'Briefcase', component: Briefcase },
-        ],
-    };
-
-    const allIcons = Object.values(iconCategories).flat();
+    const iconCategories = ICON_CATEGORIES;
+    const allIcons = ALL_ICONS;
 
     const filteredIcons = selectedCategory === 'all'
         ? allIcons.filter(icon => icon.name.toLowerCase().includes(searchQuery.toLowerCase()))

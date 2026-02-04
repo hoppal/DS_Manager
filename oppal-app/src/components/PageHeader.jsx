@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@oppal/ui';
+import { Button } from '@prism/ui';
 
 /**
  * PageHeader - A reusable page header component for consistent page layouts
