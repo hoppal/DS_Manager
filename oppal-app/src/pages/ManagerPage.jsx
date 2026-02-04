@@ -29,7 +29,8 @@ import {
     Search,
     Grid,
     RotateCcw,
-    Edit
+    Edit,
+    ChevronDown
 } from 'lucide-react';
 import { ICON_CATEGORIES, ALL_ICONS } from '../constants/icons';
 
@@ -138,9 +139,6 @@ export default function ManagerPage() {
                 colorTokens[c.key] = { "value": c.hex };
             }
         });
-        useEffect(() => {
-            console.log('Prism DS Manager v1.1.0 loaded');
-        }, []);
         // Map typography
         const typoTokens = {};
         tokenTypography.forEach(t => {
