@@ -1,0 +1,193 @@
+{
+  "version": "1.0.0",
+  "brand": "Orbitron",
+  "colors": {
+    "primary": {
+      "50": "#e6f7f4",
+      "100": "#ccefe9",
+      "200": "#99dfd3",
+      "300": "#66cfbd",
+      "400": "#33bfa7",
+      "500": "#00af91",
+      "600": "#008c74",
+      "700": "#006957",
+      "800": "#00463a",
+      "900": "#00231d",
+      "DEFAULT": "#00af91"
+    },
+    "teal": {
+      "50": "#e6f5f5",
+      "100": "#ccebeb",
+      "200": "#99d7d7",
+      "300": "#66c3c3",
+      "400": "#33afaf",
+      "500": "#009b9b",
+      "600": "#007c7c",
+      "700": "#005d5d",
+      "800": "#003e3e",
+      "900": "#001f1f",
+      "DEFAULT": "#009b9b"
+    },
+    "success": {
+      "50": "#e8f8f0",
+      "100": "#d1f1e1",
+      "500": "#22c55e",
+      "600": "#16a34a",
+      "700": "#15803d",
+      "DEFAULT": "#16a34a"
+    },
+    "warning": {
+      "50": "#fff7ed",
+      "100": "#ffedd5",
+      "500": "#f97316",
+      "600": "#ea580c",
+      "700": "#c2410c",
+      "DEFAULT": "#ea580c"
+    },
+    "error": {
+      "50": "#fef2f2",
+      "100": "#fee2e2",
+      "500": "#ef4444",
+      "600": "#dc2626",
+      "700": "#b91c1c",
+      "DEFAULT": "#dc2626"
+    },
+    "neutral": {
+      "50": "#f8f9fa",
+      "100": "#f1f3f5",
+      "200": "#e9ecef",
+      "300": "#dee2e6",
+      "400": "#ced4da",
+      "500": "#adb5bd",
+      "600": "#6c757d",
+      "700": "#495057",
+      "800": "#343a40",
+      "900": "#212529",
+      "950": "#0d0f11"
+    },
+    "sidebar": {
+      "bg": "#f8f9fa",
+      "active": "#00af91",
+      "text": "#495057",
+      "textActive": "#ffffff"
+    },
+    "chart": {
+      "primary": "#00af91",
+      "secondary": "#009b9b",
+      "light": "#66cfbd",
+      "lighter": "#99dfd3",
+      "gradient": {
+        "start": "#00af91",
+        "end": "#009b9b"
+      }
+    },
+    "positive": "#16a34a",
+    "negative": "#dc2626",
+    "white": "#ffffff",
+    "black": "#000000",
+    "transparent": "transparent"
+  },
+  "spacing": {
+    "0": "0px",
+    "1": "4px",
+    "2": "8px",
+    "3": "12px",
+    "4": "16px",
+    "5": "20px",
+    "6": "24px",
+    "7": "28px",
+    "8": "32px",
+    "10": "40px",
+    "12": "48px",
+    "16": "64px",
+    "20": "80px",
+    "24": "96px",
+    "32": "128px"
+  },
+  "typography": {
+    "fontFamily": {
+      "primary": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif",
+      "display": "'Inter', sans-serif",
+      "mono": "'JetBrains Mono', 'Fira Code', monospace"
+    },
+    "fontSize": {
+      "xs": "0.75rem",
+      "sm": "0.875rem",
+      "base": "1rem",
+      "lg": "1.125rem",
+      "xl": "1.25rem",
+      "2xl": "1.5rem",
+      "3xl": "1.875rem",
+      "4xl": "2.25rem",
+      "5xl": "3rem"
+    },
+    "fontWeight": {
+      "normal": "400",
+      "medium": "500",
+      "semibold": "600",
+      "bold": "700",
+      "extrabold": "800"
+    },
+    "lineHeight": {
+      "tight": "1.25",
+      "normal": "1.5",
+      "relaxed": "1.75"
+    }
+  },
+  "borderRadius": {
+    "none": "0px",
+    "sm": "4px",
+    "md": "8px",
+    "lg": "12px",
+    "xl": "16px",
+    "2xl": "20px",
+    "full": "9999px"
+  },
+  "shadows": {
+    "xs": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+    "sm": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+    "md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+    "lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+    "xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+    "2xl": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+    "inner": "inset 0 2px 4px 0 rgb(0 0 0 / 0.05)",
+    "none": "none"
+  },
+  "breakpoints": {
+    "sm": "640px",
+    "md": "768px",
+    "lg": "1024px",
+    "xl": "1280px",
+    "2xl": "1536px"
+  },
+  "transitions": {
+    "fast": "150ms",
+    "base": "200ms",
+    "slow": "300ms",
+    "slower": "500ms"
+  },
+  "zIndex": {
+    "dropdown": "1000",
+    "sticky": "1020",
+    "fixed": "1030",
+    "modalBackdrop": "1040",
+    "modal": "1050",
+    "popover": "1060",
+    "tooltip": "1070"
+  },
+  "sidebar": {
+    "width": "240px",
+    "collapsedWidth": "72px"
+  },
+  "charts": {
+    "barHeight": "180px",
+    "donutSize": "160px",
+    "colors": [
+      "#00af91",
+      "#009b9b",
+      "#66cfbd",
+      "#33bfa7",
+      "#99dfd3"
+    ]
+  }
+}

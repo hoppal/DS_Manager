@@ -28,6 +28,7 @@
 - [x] **Icon Browser** - Searchable library of 100+ Lucide icons
 - [x] **AI Integration** - Export context for Claude/Gemini
 - [x] **GitHub Pages Deployment** - Live at hoppal.github.io/DS_Manager
+- [x] **Context Fetching Fix** - Resolved 404s with --nojekyll and path updates
 
 ### Documentation
 - [x] **AI Context File** - `.context/ai-context.md` with complete API reference

@@ -138,7 +138,9 @@ export default function ManagerPage() {
                 colorTokens[c.key] = { "value": c.hex };
             }
         });
-
+        useEffect(() => {
+            console.log('Prism DS Manager v1.1.0 loaded');
+        }, []);
         // Map typography
         const typoTokens = {};
         tokenTypography.forEach(t => {
@@ -330,7 +332,7 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
     const exportContext = async () => {
         try {
             const baseUrl = import.meta.env.BASE_URL || '/';
-            const contextPath = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}.context/ai-context.md`;
+            const contextPath = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}design-context/ai-context.md`;
             const response = await fetch(contextPath);
 
             if (response.ok) {
@@ -456,14 +458,14 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
                             <div className="mt-1"><Terminal className="w-4 h-4 text-primary-500" /></div>
                             <div>
                                 <p className="text-sm font-semibold text-neutral-900">Share the Context File</p>
-                                <p className="text-xs text-neutral-500">For new projects, share <code className="bg-neutral-200 px-1 rounded text-xs">.context/ai-context.md</code></p>
+                                <p className="text-xs text-neutral-500">For new projects, share <code className="bg-neutral-200 px-1 rounded text-xs">design-context/ai-context.md</code></p>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
                 <Alert variant="info">
-                    The full context file is at <code className="font-mono text-xs">.context/ai-context.md</code> — share this with any AI tool!
+                    The full context file is at <code className="font-mono text-xs">design-context/ai-context.md</code> — share this with any AI tool!
                 </Alert>
             </div>
         </div>

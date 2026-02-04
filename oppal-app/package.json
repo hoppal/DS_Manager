@@ -1,7 +1,7 @@
 {
   "name": "oppal-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build && touch dist/.nojekyll",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -t --nojekyll -d dist"
   },
   "dependencies": {
     "@prism/ui": "file:../packages/oppal-ui",
