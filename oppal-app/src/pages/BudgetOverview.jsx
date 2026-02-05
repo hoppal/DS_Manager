@@ -8,11 +8,11 @@ import {
     DonutChart,
     Alert,
     Button
-} from '@oppal/ui';
+} from '@prism/ui';
 import { TrendingUp, Download, RefreshCw } from 'lucide-react';
 
 /**
- * BudgetOverview - A component created using the Oppal Design System AI context
+ * BudgetOverview - A component created using the Prism Design System AI context
  * 
  * This demonstrates how AI assistants can generate on-brand components
  * when given the design system context.
@@ -112,8 +112,8 @@ export default function BudgetOverview() {
                                                 {dept.spent} / {dept.budget}
                                             </span>
                                             <span className={`font-semibold ${dept.percent > 75
-                                                    ? 'text-warning-600'
-                                                    : 'text-primary-600'
+                                                ? 'text-warning-600'
+                                                : 'text-primary-600'
                                                 }`}>
                                                 {dept.percent}%
                                             </span>
@@ -122,8 +122,8 @@ export default function BudgetOverview() {
                                     <div className="h-2 bg-neutral-200 rounded-full overflow-hidden">
                                         <div
                                             className={`h-full rounded-full transition-all ${dept.percent > 75
-                                                    ? 'bg-warning-500'
-                                                    : 'bg-primary-500'
+                                                ? 'bg-warning-500'
+                                                : 'bg-primary-500'
                                                 }`}
                                             style={{ width: `${dept.percent}%` }}
                                         />

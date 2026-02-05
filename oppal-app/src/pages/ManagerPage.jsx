@@ -10,7 +10,7 @@ import {
     Alert,
     Input,
     DonutChart
-} from '@oppal/ui';
+} from '@prism/ui';
 import {
     Settings,
     Eye,
@@ -28,110 +28,11 @@ import {
     Clipboard,
     Search,
     Grid,
-    // Common icons for Icon Browser
-    Home,
-    User,
-    Users,
-    Mail,
-    Phone,
-    Calendar,
-    Clock,
-    Bell,
-    Star,
-    Heart,
-    Bookmark,
-    Tag,
-    Filter,
-    SlidersHorizontal,
-    RefreshCw,
     RotateCcw,
-    Upload,
-    File,
-    FileText,
-    Folder,
-    Image,
-    Video,
-    Music,
-    Link,
-    Share,
-    Send,
-    MessageSquare,
     Edit,
-    Trash2,
-    Plus,
-    Minus,
-    X,
-    ChevronDown,
-    ChevronUp,
-    ChevronLeft,
-    ChevronRight,
-    ArrowUp,
-    ArrowDown,
-    ArrowLeft,
-    ArrowRight,
-    TrendingUp,
-    TrendingDown,
-    BarChart2,
-    PieChart,
-    Activity,
-    Zap,
-    Shield,
-    Lock,
-    Unlock,
-    Key,
-    Globe,
-    Map,
-    MapPin,
-    Navigation,
-    Compass,
-    Sun,
-    Moon,
-    Cloud,
-    Wifi,
-    Bluetooth,
-    Battery,
-    Power,
-    Cpu,
-    HardDrive,
-    Server,
-    Database,
-    AlertCircle,
-    AlertTriangle,
-    Info,
-    HelpCircle,
-    CheckCircle,
-    XCircle,
-    PlayCircle,
-    PauseCircle,
-    StopCircle,
-    SkipForward,
-    SkipBack,
-    Volume2,
-    VolumeX,
-    Maximize,
-    Minimize,
-    MoreHorizontal,
-    MoreVertical,
-    Menu,
-    Grip,
-    Move,
-    Package,
-    ShoppingCart,
-    CreditCard,
-    DollarSign,
-    Percent,
-    Receipt,
-    Truck,
-    Building,
-    Briefcase,
-    Award,
-    Target,
-    Flag,
-    Smile,
-    Frown,
-    ThumbsUp,
-    ThumbsDown
+    ChevronDown
 } from 'lucide-react';
+import { ICON_CATEGORIES, ALL_ICONS } from '../constants/icons';
 
 export default function ManagerPage() {
     const [activeTab, setActiveTab] = useState('gallery');
@@ -141,6 +42,171 @@ export default function ManagerPage() {
         navigator.clipboard.writeText('./setup.sh');
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
+    };
+
+    const defaultColors = [
+        { name: 'Primary', class: 'bg-primary-500', hex: '#00af91', key: 'primary' },
+        { name: 'Teal', class: 'bg-teal-500', hex: '#009b9b', key: 'teal' },
+        { name: 'Success', class: 'bg-success-500', hex: '#22c55e', key: 'success' },
+        { name: 'Warning', class: 'bg-warning-500', hex: '#f97316', key: 'warning' },
+        { name: 'Error', class: 'bg-error-500', hex: '#ef4444', key: 'danger' },
+        { name: 'Neutral', class: 'bg-neutral-500', hex: '#6b7280', key: 'neutral' },
+    ];
+
+    const [tokenColors, setTokenColors] = useState(defaultColors);
+
+    const updateColor = (index, newHex) => {
+        // Only update if it's a valid hex or starts with # for typing
+        if (/^#([0-9A-F]{3,6})$/i.test(newHex) || newHex === '#') {
+            const newColors = [...tokenColors];
+            newColors[index] = { ...newColors[index], hex: newHex, isCustom: true };
+            setTokenColors(newColors);
+        }
+    };
+
+    const resetColor = (index) => {
+        const newColors = [...tokenColors];
+        newColors[index] = { ...defaultColors[index], isCustom: false };
+        setTokenColors(newColors);
+    };
+
+    const resetAllColors = () => setTokenColors(defaultColors);
+
+    const defaultTypography = [
+        { id: 'h1', name: 'Heading 1', family: 'Inter', size: '2.25rem', weight: '800', description: 'Primary page titles' },
+        { id: 'h2', name: 'Heading 2', family: 'Inter', size: '1.5rem', weight: '700', description: 'Section headers' },
+        { id: 'body', name: 'Body Text', family: 'Inter', size: '1rem', weight: '400', description: 'Default paragraph text' },
+    ];
+
+    const [tokenTypography, setTokenTypography] = useState(defaultTypography);
+
+    const updateTypography = (id, updates) => {
+        setTokenTypography(prev => prev.map(t => t.id === id ? { ...t, ...updates, isCustom: true } : t));
+    };
+
+    const resetTypography = (id) => {
+        const original = defaultTypography.find(t => t.id === id);
+        setTokenTypography(prev => prev.map(t => t.id === id ? { ...original, isCustom: false } : t));
+    };
+
+    const resetAllTypography = () => setTokenTypography(defaultTypography);
+
+    const [tokenRadius, setTokenRadius] = useState(8);
+    const [tokenSpacing, setTokenSpacing] = useState(24);
+
+    // Dynamic Font & Color & Layout Loader
+    React.useEffect(() => {
+        const families = [...new Set(tokenTypography.map(t => t.family))];
+        const linkId = 'google-fonts-loader';
+        let link = document.getElementById(linkId);
+
+        if (!link) {
+            link = document.createElement('link');
+            link.id = linkId;
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+        }
+
+        const fontString = families.map(f => `family=${f.replace(/\s+/g, '+')}:wght@400;500;600;700;800`).join('&');
+        link.href = `https://fonts.googleapis.com/css2?${fontString}&display=swap`;
+
+        // Apply to CSS Variables for Global Sync
+        const root = document.documentElement;
+        tokenTypography.forEach(t => {
+            root.style.setProperty(`--font-${t.id}`, `'${t.family}', sans-serif`);
+        });
+
+        // Sync colors
+        const primary = tokenColors.find(c => c.key === 'primary');
+        if (primary) {
+            root.style.setProperty('--color-primary-500', primary.hex);
+            root.style.setProperty('--color-primary-600', primary.hex);
+        }
+
+        // Sync Layout
+        root.style.setProperty('--radius-base', `${tokenRadius}px`);
+        root.style.setProperty('--spacing-base', `${tokenSpacing}px`);
+
+    }, [tokenTypography, tokenColors, tokenRadius, tokenSpacing]);
+
+    const exportConfig = () => {
+        // Map current colors to the tokens object
+        const colorTokens = {};
+        tokenColors.forEach(c => {
+            if (c.key === 'primary' || c.key === 'neutral') {
+                colorTokens[c.key] = { "500": { "value": c.hex } };
+            } else {
+                colorTokens[c.key] = { "value": c.hex };
+            }
+        });
+        // Map typography
+        const typoTokens = {};
+        tokenTypography.forEach(t => {
+            typoTokens[t.id] = {
+                "fontFamily": { "value": t.family },
+                "fontSize": { "value": t.size },
+                "fontWeight": { "value": t.weight }
+            };
+        });
+
+        const tokens = {
+            "global": {
+                "colors": {
+                    ...colorTokens,
+                    "info": { "value": "#3b82f6" }
+                },
+                "typography": typoTokens,
+                "fontFamilies": {
+                    "sans": { "value": tokenTypography.find(t => t.id === 'body')?.family || "Inter" }
+                },
+                "fontWeights": {
+                    "normal": { "value": "400" },
+                    "medium": { "value": "500" },
+                    "semibold": { "value": "600" },
+                    "bold": { "value": "700" },
+                    "extrabold": { "value": "800" }
+                },
+                "fontSizes": {
+                    "xs": { "value": "0.75rem" },
+                    "sm": { "value": "0.875rem" },
+                    "base": { "value": "1rem" },
+                    "lg": { "value": "1.125rem" },
+                    "xl": { "value": "1.25rem" },
+                    "2xl": { "value": "1.5rem" },
+                    "3xl": { "value": "1.875rem" },
+                    "4xl": { "value": "2.25rem" }
+                },
+                "spacing": {
+                    "base": { "value": `${tokenSpacing / 4}px` },
+                    "1": { "value": `${tokenSpacing / 4}px` },
+                    "2": { "value": `${tokenSpacing / 2}px` },
+                    "3": { "value": `${tokenSpacing * 0.75}px` },
+                    "4": { "value": `${tokenSpacing}px` },
+                    "6": { "value": `${tokenSpacing * 1.5}px` },
+                    "8": { "value": `${tokenSpacing * 2}px` },
+                    "12": { "value": `${tokenSpacing * 3}px` },
+                    "16": { "value": `${tokenSpacing * 4}px` },
+                    "24": { "value": `${tokenSpacing * 6}px` },
+                    "32": { "value": `${tokenSpacing * 8}px` }
+                },
+                "borderRadius": {
+                    "base": { "value": `${tokenRadius}px` },
+                    "lg": { "value": `${tokenRadius}px` },
+                    "xl": { "value": `${tokenRadius * 1.5}px` }
+                }
+            }
+        };
+
+        const dataStr = JSON.stringify(tokens, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'prism-tokens.json';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     };
 
     const tabs = [
@@ -157,15 +223,15 @@ export default function ManagerPage() {
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-neutral-900">Oppal DS Manager</h1>
-                    <p className="text-neutral-600">Central hub for managing and applying the Oppal Design System.</p>
+                    <h1 className="text-2xl font-bold text-neutral-900">Prism DS Manager</h1>
+                    <p className="text-neutral-600">Central hub for managing and applying the Prism Design System.</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <Button variant="secondary" onClick={copyCommand}>
                         {copied ? <Check className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
                         {copied ? 'Copied' : 'Copy Setup Script'}
                     </Button>
-                    <Button>
+                    <Button onClick={exportConfig}>
                         <Download className="w-4 h-4 mr-2" />
                         Export Config
                     </Button>
@@ -193,8 +259,26 @@ export default function ManagerPage() {
                 {activeTab === 'gallery' && <ComponentGallery />}
                 {activeTab === 'patterns' && <PatternLibrary />}
                 {activeTab === 'icons' && <IconBrowser />}
-                {activeTab === 'tokens' && <TokensManager />}
-                {activeTab === 'typography' && <TypographyManager />}
+                {activeTab === 'tokens' && (
+                    <TokensManager
+                        colors={tokenColors}
+                        updateColor={updateColor}
+                        resetColor={resetColor}
+                        resetAll={resetAllColors}
+                        radius={tokenRadius}
+                        setRadius={setTokenRadius}
+                        spacing={tokenSpacing}
+                        setSpacing={setTokenSpacing}
+                    />
+                )}
+                {activeTab === 'typography' && (
+                    <TypographyManager
+                        typography={tokenTypography}
+                        updateTypography={updateTypography}
+                        resetTypography={resetTypography}
+                        resetAll={resetAllTypography}
+                    />
+                )}
                 {activeTab === 'deploy' && <DeployWizard />}
                 {activeTab === 'usage' && <UsageGuide />}
             </div>
@@ -203,7 +287,7 @@ export default function ManagerPage() {
 }
 
 function UsageGuide() {
-    const systemPrompt = `I am building an app using the Oppal Design System.
+    const systemPrompt = `I am building an app using the Prism Design System.
 
 ## Design Tokens
 - Primary (Teal): #00af91 — buttons, active states, charts
@@ -217,7 +301,7 @@ function UsageGuide() {
 - Metric values: text-4xl font-extrabold (800)
 - Labels: text-xs font-medium uppercase
 
-## Component Library: @oppal/ui
+## Component Library: @prism/ui
 Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarChart, DashboardLayout, Sidebar
 
 ## Key APIs
@@ -229,7 +313,7 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
 \`\`\`
 
 ## Rules
-1. Always use components from @oppal/ui
+1. Always use components from @prism/ui
 2. Cards: white bg, shadow-md, rounded-lg, p-6
 3. Tables: right-align numbers, uppercase headers
 4. Charts: teal (#00af91), no gridlines`;
@@ -245,7 +329,10 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
 
     const exportContext = async () => {
         try {
-            const response = await fetch('/.context/ai-context.md');
+            const baseUrl = import.meta.env.BASE_URL || '/';
+            const contextPath = `${baseUrl.endsWith('/') ? baseUrl : baseUrl + '/'}design-context/ai-context.md`;
+            const response = await fetch(contextPath);
+
             if (response.ok) {
                 const content = await response.text();
                 navigator.clipboard.writeText(content);
@@ -270,7 +357,7 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
                 <section className="space-y-4">
                     <h2 className="text-xl font-bold text-neutral-900">AI Collaboration Guide</h2>
                     <p className="text-neutral-600">
-                        Maximize productivity by teaching Gemini or Claude about the Oppal Design System.
+                        Maximize productivity by teaching Gemini or Claude about the Prism Design System.
                         Follow these steps to ensure the AI generates on-brand, compatible code.
                     </p>
                 </section>
@@ -306,7 +393,7 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="text-sm text-neutral-600">
-                            Ask the AI to create components. It will use @oppal/ui and follow your brand automatically.
+                            Ask the AI to create components. It will use @prism/ui and follow your brand automatically.
                         </CardContent>
                     </Card>
                 </div>
@@ -355,7 +442,7 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
                             <div className="mt-1"><Eye className="w-4 h-4 text-primary-500" /></div>
                             <div>
                                 <p className="text-sm font-semibold text-neutral-900">Visual Checks</p>
-                                <p className="text-xs text-neutral-500">Ask the AI to "Check this for Oppal compliance" after an edit.</p>
+                                <p className="text-xs text-neutral-500">Ask the AI to "Check this for Prism compliance" after an edit.</p>
                             </div>
                         </div>
                         <div className="flex gap-3">
@@ -369,14 +456,14 @@ Available: Button, Card, StatCard, DataTable, Alert, Input, DonutChart, MiniBarC
                             <div className="mt-1"><Terminal className="w-4 h-4 text-primary-500" /></div>
                             <div>
                                 <p className="text-sm font-semibold text-neutral-900">Share the Context File</p>
-                                <p className="text-xs text-neutral-500">For new projects, share <code className="bg-neutral-200 px-1 rounded text-xs">.context/ai-context.md</code></p>
+                                <p className="text-xs text-neutral-500">For new projects, share <code className="bg-neutral-200 px-1 rounded text-xs">design-context/ai-context.md</code></p>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
                 <Alert variant="info">
-                    The full context file is at <code className="font-mono text-xs">.context/ai-context.md</code> — share this with any AI tool!
+                    The full context file is at <code className="font-mono text-xs">design-context/ai-context.md</code> — share this with any AI tool!
                 </Alert>
             </div>
         </div>
@@ -461,7 +548,7 @@ function ComponentGallery() {
                         { header: 'Last Updated', key: 'updated', align: 'right' },
                     ]}
                     data={[
-                        { name: 'Oppal UI', status: 'Active', updated: '2 mins ago' },
+                        { name: 'Prism UI', status: 'Active', updated: '2 mins ago' },
                         { name: 'SupplyChain Pro', status: 'Draft', updated: '1 hour ago' },
                         { name: 'Finance Dashboard', status: 'Archived', updated: '3 days ago' },
                     ]}
@@ -471,58 +558,236 @@ function ComponentGallery() {
     );
 }
 
-function TokensManager() {
-    const colors = [
-        { name: 'Primary', class: 'bg-primary-500', hex: '#00af91' },
-        { name: 'Teal', class: 'bg-teal-500', hex: '#009b9b' },
-        { name: 'Success', class: 'bg-success-500', hex: '#22c55e' },
-        { name: 'Warning', class: 'bg-warning-500', hex: '#f97316' },
-        { name: 'Error', class: 'bg-error-500', hex: '#ef4444' },
-        { name: 'Neutral', class: 'bg-neutral-500', hex: '#adb5bd' },
-    ];
-
+function TokensManager({ colors, updateColor, resetColor, resetAll, radius, setRadius, spacing, setSpacing }) {
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Color Palette</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-                    {colors.map((color) => (
-                        <div key={color.name} className="space-y-3">
-                            <div className={`aspect-square rounded-xl shadow-inner ${color.class}`} />
-                            <div>
-                                <p className="text-sm font-semibold text-neutral-900">{color.name}</p>
-                                <p className="text-xs text-neutral-500 font-mono uppercase">{color.hex}</p>
+        <div className="space-y-8">
+            <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                        <CardTitle>Color Palette</CardTitle>
+                        <p className="text-sm text-neutral-500 mt-1">Click a color to customize it or type the hex code manually.</p>
+                    </div>
+                    {colors.some(c => c.isCustom) && (
+                        <Button variant="ghost" size="sm" onClick={resetAll}>
+                            Reset All
+                        </Button>
+                    )}
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+                        {colors.map((color, index) => (
+                            <div key={color.name} className="space-y-3">
+                                <div className="relative group">
+                                    <div
+                                        className={`aspect-square rounded-2xl shadow-inner cursor-pointer transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg ${!color.isCustom ? color.class : ''}`}
+                                        style={color.isCustom ? { backgroundColor: color.hex } : {}}
+                                        onClick={() => document.getElementById(`color-picker-${index}`).click()}
+                                    />
+                                    <input
+                                        id={`color-picker-${index}`}
+                                        type="color"
+                                        value={color.hex}
+                                        onChange={(e) => updateColor(index, e.target.value)}
+                                        className="absolute inset-0 w-full h-full opacity-0 invisible"
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                        <div className="bg-white/90 p-2 rounded-xl shadow-xl backdrop-blur-sm border border-white/20">
+                                            <Edit className="w-5 h-5 text-neutral-800" />
+                                        </div>
+                                    </div>
+                                    {color.isCustom && (
+                                        <button
+                                            onClick={(e) => { e.stopPropagation(); resetColor(index); }}
+                                            className="absolute -top-2 -right-2 w-6 h-6 bg-white rounded-full shadow-md border border-neutral-100 flex items-center justify-center hover:bg-neutral-50 transition-colors z-10"
+                                            title="Reset to default"
+                                        >
+                                            <RotateCcw className="w-3 h-3 text-neutral-500" />
+                                        </button>
+                                    )}
+                                </div>
+                                <div className="space-y-1.5 px-1">
+                                    <p className="text-sm font-bold text-neutral-900">{color.name}</p>
+                                    <div className="flex items-center gap-2">
+                                        <div className="relative flex-1">
+                                            <input
+                                                type="text"
+                                                value={color.hex}
+                                                onChange={(e) => updateColor(index, e.target.value)}
+                                                className="w-full text-[10px] text-neutral-600 font-mono uppercase tracking-widest bg-neutral-50 border border-neutral-200 rounded px-1.5 py-0.5 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 transition-all"
+                                            />
+                                        </div>
+                                        {color.isCustom && (
+                                            <div className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" title="Customized" />
+                                        )}
+                                    </div>
+                                </div>
                             </div>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Border Radius</CardTitle>
+                        <p className="text-sm text-neutral-500 mt-1">Adjust the global corner roundness for all components.</p>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <div className="flex items-center justify-between text-sm">
+                            <span className="font-medium text-neutral-700">Corner Radius</span>
+                            <span className="bg-primary-50 text-primary-700 px-2 py-1 rounded font-mono text-xs">{radius}px</span>
                         </div>
-                    ))}
-                </div>
-            </CardContent>
-        </Card>
+                        <input
+                            type="range"
+                            min="0"
+                            max="32"
+                            value={radius}
+                            onChange={(e) => setRadius(parseInt(e.target.value))}
+                            className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-500"
+                        />
+                        <div className="grid grid-cols-3 gap-4 pt-4">
+                            {[0, 8, 16].map(val => (
+                                <button
+                                    key={val}
+                                    onClick={() => setRadius(val)}
+                                    className={`py-6 border-2 rounded-xl transition-all flex items-center justify-center font-medium text-xs ${radius === val ? 'border-primary-500 bg-primary-50 text-primary-700' : 'border-neutral-100 bg-white text-neutral-400 hover:border-neutral-200'}`}
+                                >
+                                    {val === 0 ? 'Sharp' : val === 8 ? 'Default' : 'Round'}
+                                </button>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Base Spacing</CardTitle>
+                        <p className="text-sm text-neutral-500 mt-1">Control the padding and gaps between UI elements.</p>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                        <div className="flex items-center justify-between text-sm">
+                            <span className="font-medium text-neutral-700">Internal Padding</span>
+                            <span className="bg-primary-50 text-primary-700 px-2 py-1 rounded font-mono text-xs">{spacing}px</span>
+                        </div>
+                        <input
+                            type="range"
+                            min="8"
+                            max="48"
+                            value={spacing}
+                            onChange={(e) => setSpacing(parseInt(e.target.value))}
+                            className="w-full h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-500"
+                        />
+                        <div className="grid grid-cols-3 gap-4 pt-4">
+                            {[12, 24, 36].map(val => (
+                                <button
+                                    key={val}
+                                    onClick={() => setSpacing(val)}
+                                    className={`py-3 border-2 rounded-xl transition-all flex flex-col items-center justify-center font-medium text-xs ${spacing === val ? 'border-primary-500 bg-primary-50 text-primary-700' : 'border-neutral-100 bg-white text-neutral-400 hover:border-neutral-200'}`}
+                                >
+                                    <div className="flex gap-1 mb-1">
+                                        <div className="w-1 h-3 bg-current rounded-full" />
+                                        <div className="w-1 h-3 bg-current rounded-full" />
+                                    </div>
+                                    {val === 12 ? 'Compact' : val === 24 ? 'Cozy' : 'Spacious'}
+                                </button>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
     );
 }
 
-function TypographyManager() {
+function TypographyManager({ typography, updateTypography, resetTypography, resetAll }) {
+    const googleFonts = [
+        'Inter', 'Roboto', 'Open Sans', 'Lato', 'Poppins', 'Montserrat',
+        'Playfair Display', 'Merriweather', 'Lora', 'Oswald',
+        'JetBrains Mono', 'Fira Code', 'Space Grotesk', 'Outfit', 'Plus Jakarta Sans'
+    ].sort();
+
     return (
-        <Card>
-            <CardContent className="divide-y divide-neutral-100">
-                <div className="py-6 first:pt-0">
-                    <p className="text-xs text-neutral-500 font-mono mb-4">Font: Inter / 2.25rem / Extrabold</p>
-                    <h1 className="text-4xl font-extrabold text-neutral-900">Sphinx of black quartz, judge my vow.</h1>
+        <div className="space-y-6">
+            <div className="flex items-center justify-between mb-2">
+                <div>
+                    <h2 className="text-xl font-bold text-neutral-900">Typography System</h2>
+                    <p className="text-sm text-neutral-500">Configure font families for different text levels.</p>
                 </div>
-                <div className="py-6">
-                    <p className="text-xs text-neutral-500 font-mono mb-4">Font: Inter / 1.5rem / Bold</p>
-                    <h2 className="text-2xl font-bold text-neutral-900">Pack my box with five dozen liquor jugs.</h2>
-                </div>
-                <div className="py-6">
-                    <p className="text-xs text-neutral-500 font-mono mb-4">Font: Inter / 1rem / Regular</p>
-                    <p className="text-base text-neutral-700">
-                        The quick brown fox jumps over the lazy dog. Designers use this text to see how their typography looks in real-world scenarios. It helps in assessing spacing, weight, and readability.
-                    </p>
-                </div>
-            </CardContent>
-        </Card>
+                {typography.some(t => t.isCustom) && (
+                    <Button variant="ghost" size="sm" onClick={resetAll}>
+                        <RotateCcw className="w-3.5 h-3.5 mr-2" />
+                        Reset All
+                    </Button>
+                )}
+            </div>
+
+            <div className="grid grid-cols-1 gap-6">
+                {typography.map((typo) => (
+                    <Card key={typo.id} className="overflow-hidden border-neutral-200">
+                        <CardHeader className="bg-neutral-50/50 border-b border-neutral-100 py-4">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <CardTitle className="text-lg">{typo.name}</CardTitle>
+                                        {typo.isCustom && (
+                                            <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse" />
+                                        )}
+                                    </div>
+                                    <p className="text-xs text-neutral-500 uppercase tracking-wider font-medium">{typo.description}</p>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <div className="relative">
+                                        <select
+                                            value={typo.family}
+                                            onChange={(e) => updateTypography(typo.id, { family: e.target.value })}
+                                            className="appearance-none bg-white border border-neutral-200 rounded-lg pl-3 pr-10 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all font-medium min-w-[180px]"
+                                        >
+                                            {googleFonts.map(font => (
+                                                <option key={font} value={font}>{font}</option>
+                                            ))}
+                                        </select>
+                                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
+                                    </div>
+                                    {typo.isCustom && (
+                                        <button
+                                            onClick={() => resetTypography(typo.id)}
+                                            className="p-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 rounded-lg transition-colors"
+                                            title="Reset to default"
+                                        >
+                                            <RotateCcw className="w-4 h-4" />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </CardHeader>
+                        <CardContent className="p-8">
+                            <div className="space-y-4">
+                                <div className="flex items-center gap-4 text-xs font-mono text-neutral-400 border-b border-neutral-50 pb-2">
+                                    <span>Family: {typo.family}</span>
+                                    <span>Size: {typo.size}</span>
+                                    <span>Weight: {typo.weight}</span>
+                                </div>
+                                <p
+                                    style={{
+                                        fontFamily: `'${typo.family}', sans-serif`,
+                                        fontSize: typo.size,
+                                        fontWeight: typo.weight,
+                                        lineHeight: 1.2
+                                    }}
+                                    className="text-neutral-900"
+                                >
+                                    {typo.id === 'body'
+                                        ? 'The quick brown fox jumps over the lazy dog. Designers use this text to see how their typography looks in real-world scenarios. It helps in assessing spacing, weight, and readability.'
+                                        : 'Sphinx of black quartz, judge my vow.'
+                                    }
+                                </p>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+        </div>
     );
 }
 
@@ -531,7 +796,7 @@ function DeployWizard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
                 <h2 className="text-xl font-bold text-neutral-900">Deploy to New Project</h2>
-                <p className="text-neutral-600">Apply the Oppal Design System to your existing projects using our CLI tool.</p>
+                <p className="text-neutral-600">Apply the Prism Design System to your existing projects using our CLI tool.</p>
 
                 <div className="space-y-4">
                     <div className="bg-neutral-900 rounded-lg p-4 font-mono text-sm text-neutral-300">
@@ -908,7 +1173,7 @@ function PatternLibrary() {
             <section className="space-y-4">
                 <h2 className="text-xl font-bold text-neutral-900">Pattern Library</h2>
                 <p className="text-neutral-600">
-                    Pre-built layout compositions using @oppal/ui components. Copy and customize for rapid development.
+                    Pre-built layout compositions using @prism/ui components. Copy and customize for rapid development.
                 </p>
             </section>
 
@@ -956,7 +1221,7 @@ function PatternLibrary() {
             ))}
 
             <Alert variant="info">
-                These patterns use components from <code className="font-mono text-xs">@oppal/ui</code>.
+                These patterns use components from <code className="font-mono text-xs">@prism/ui</code>.
                 Make sure to import the required components before using.
             </Alert>
         </div>
@@ -969,112 +1234,8 @@ function IconBrowser() {
     const [copiedIcon, setCopiedIcon] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState('all');
 
-    const iconCategories = {
-        'Navigation': [
-            { name: 'Home', component: Home },
-            { name: 'Menu', component: Menu },
-            { name: 'Search', component: Search },
-            { name: 'ChevronDown', component: ChevronDown },
-            { name: 'ChevronUp', component: ChevronUp },
-            { name: 'ChevronLeft', component: ChevronLeft },
-            { name: 'ChevronRight', component: ChevronRight },
-            { name: 'ArrowUp', component: ArrowUp },
-            { name: 'ArrowDown', component: ArrowDown },
-            { name: 'ArrowLeft', component: ArrowLeft },
-            { name: 'ArrowRight', component: ArrowRight },
-            { name: 'ExternalLink', component: ExternalLink },
-        ],
-        'Actions': [
-            { name: 'Plus', component: Plus },
-            { name: 'Minus', component: Minus },
-            { name: 'X', component: X },
-            { name: 'Check', component: Check },
-            { name: 'Edit', component: Edit },
-            { name: 'Trash2', component: Trash2 },
-            { name: 'Copy', component: Copy },
-            { name: 'Download', component: Download },
-            { name: 'Upload', component: Upload },
-            { name: 'RefreshCw', component: RefreshCw },
-            { name: 'Settings', component: Settings },
-            { name: 'MoreHorizontal', component: MoreHorizontal },
-        ],
-        'Communication': [
-            { name: 'Mail', component: Mail },
-            { name: 'Phone', component: Phone },
-            { name: 'MessageSquare', component: MessageSquare },
-            { name: 'MessageCircle', component: MessageCircle },
-            { name: 'Send', component: Send },
-            { name: 'Share', component: Share },
-            { name: 'Bell', component: Bell },
-        ],
-        'Users': [
-            { name: 'User', component: User },
-            { name: 'Users', component: Users },
-            { name: 'Smile', component: Smile },
-            { name: 'Frown', component: Frown },
-            { name: 'ThumbsUp', component: ThumbsUp },
-            { name: 'ThumbsDown', component: ThumbsDown },
-        ],
-        'Status': [
-            { name: 'CheckCircle', component: CheckCircle },
-            { name: 'XCircle', component: XCircle },
-            { name: 'AlertCircle', component: AlertCircle },
-            { name: 'AlertTriangle', component: AlertTriangle },
-            { name: 'Info', component: Info },
-            { name: 'HelpCircle', component: HelpCircle },
-        ],
-        'Charts': [
-            { name: 'TrendingUp', component: TrendingUp },
-            { name: 'TrendingDown', component: TrendingDown },
-            { name: 'BarChart2', component: BarChart2 },
-            { name: 'PieChart', component: PieChart },
-            { name: 'Activity', component: Activity },
-            { name: 'Target', component: Target },
-        ],
-        'Files': [
-            { name: 'File', component: File },
-            { name: 'FileText', component: FileText },
-            { name: 'Folder', component: Folder },
-            { name: 'Image', component: Image },
-            { name: 'Video', component: Video },
-            { name: 'Link', component: Link },
-        ],
-        'Commerce': [
-            { name: 'ShoppingCart', component: ShoppingCart },
-            { name: 'CreditCard', component: CreditCard },
-            { name: 'DollarSign', component: DollarSign },
-            { name: 'Percent', component: Percent },
-            { name: 'Receipt', component: Receipt },
-            { name: 'Package', component: Package },
-            { name: 'Truck', component: Truck },
-        ],
-        'Security': [
-            { name: 'Lock', component: Lock },
-            { name: 'Unlock', component: Unlock },
-            { name: 'Shield', component: Shield },
-            { name: 'Key', component: Key },
-            { name: 'Eye', component: Eye },
-        ],
-        'Date & Time': [
-            { name: 'Calendar', component: Calendar },
-            { name: 'Clock', component: Clock },
-        ],
-        'Misc': [
-            { name: 'Star', component: Star },
-            { name: 'Heart', component: Heart },
-            { name: 'Bookmark', component: Bookmark },
-            { name: 'Tag', component: Tag },
-            { name: 'Flag', component: Flag },
-            { name: 'Award', component: Award },
-            { name: 'Zap', component: Zap },
-            { name: 'Globe', component: Globe },
-            { name: 'MapPin', component: MapPin },
-            { name: 'Building', component: Building },
-            { name: 'Briefcase', component: Briefcase },
-        ],
-    };
-
-    const allIcons = Object.values(iconCategories).flat();
+    const iconCategories = ICON_CATEGORIES;
+    const allIcons = ALL_ICONS;
 
     const filteredIcons = selectedCategory === 'all'
         ? allIcons.filter(icon => icon.name.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -1118,8 +1279,8 @@ function IconBrowser() {
                             key={cat}
                             onClick={() => setSelectedCategory(cat)}
                             className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${selectedCategory === cat
-                                    ? 'bg-primary-500 text-white'
-                                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                                ? 'bg-primary-500 text-white'
+                                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
                                 }`}
                         >
                             {cat === 'all' ? 'All' : cat}
@@ -1142,8 +1303,8 @@ function IconBrowser() {
                             key={icon.name}
                             onClick={() => copyImport(icon.name)}
                             className={`group flex flex-col items-center justify-center p-3 rounded-lg border transition-all ${copiedIcon === icon.name
-                                    ? 'border-primary-500 bg-primary-50'
-                                    : 'border-neutral-200 hover:border-primary-300 hover:bg-neutral-50'
+                                ? 'border-primary-500 bg-primary-50'
+                                : 'border-neutral-200 hover:border-primary-300 hover:bg-neutral-50'
                                 }`}
                             title={`Click to copy: import { ${icon.name} } from 'lucide-react'`}
                         >

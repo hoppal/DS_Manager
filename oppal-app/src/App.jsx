@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { DashboardLayout } from '@oppal/ui';
+import { DashboardLayout } from '@prism/ui';
 import SpendPage from './pages/SpendPage';
 import CockpitPage from './pages/CockpitPage';
 import RisksPage from './pages/RisksPage';
@@ -8,6 +8,7 @@ import ContractsPage from './pages/ContractsPage';
 import ChatPage from './pages/ChatPage';
 import ManagerPage from './pages/ManagerPage';
 import BudgetOverview from './pages/BudgetOverview';
+import SettingsPage from './pages/SettingsPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/manager" element={<ManagerPage />} />
         <Route path="/budget" element={<BudgetOverview />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </DashboardLayout>
   );

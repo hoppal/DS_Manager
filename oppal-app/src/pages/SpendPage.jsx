@@ -1,4 +1,4 @@
-import { StatCard, DataTable, DonutChart } from '@oppal/ui';
+import { StatCard, DataTable, DonutChart } from '@prism/ui';
 import { DollarSign, Users, ShoppingCart } from 'lucide-react';
 
 const spendChartData = [45, 38, 52, 35, 48, 42, 55, 38, 45, 50, 40, 48, 35, 58, 45, 42, 50, 48];

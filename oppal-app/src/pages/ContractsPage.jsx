@@ -1,4 +1,4 @@
-import { DataTable, StatCard } from '@oppal/ui';
+import { DataTable, StatCard } from '@prism/ui';
 import { FileText, FileClock, FileCheck, FileWarning } from 'lucide-react';
 
 const contracts = [

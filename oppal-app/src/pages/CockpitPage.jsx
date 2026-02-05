@@ -1,4 +1,4 @@
-import { StatCard, Alert, DonutChart } from '@oppal/ui';
+import { StatCard, Alert, DonutChart } from '@prism/ui';
 import { DollarSign, Users, ShoppingCart, AlertTriangle } from 'lucide-react';
 
 const recentActivity = [

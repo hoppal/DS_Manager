@@ -11,17 +11,5 @@ export default defineConfig({
       fileName: (format) => `oppal-ui.${format === 'es' ? 'js' : 'cjs'}`,
       formats: ['es', 'cjs'],
     },
-    rollupOptions: {
-      external: ['react', 'react-dom', 'react-router-dom', 'lucide-react', 'recharts'],
-      output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-          'react-router-dom': 'ReactRouterDOM',
-          'lucide-react': 'LucideReact',
-          recharts: 'Recharts',
-        },
-      },
-    },
   },
 });

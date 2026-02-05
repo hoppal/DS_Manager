@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Button } from '@oppal/ui';
+import { Button } from '@prism/ui';
 import { Send, Bot, User } from 'lucide-react';
 
 const initialMessages = [
   {
     role: 'assistant',
-    content: 'Hello! I\'m your Oppal AI assistant. I can help you with spend analysis, supplier insights, and procurement recommendations. How can I help you today?',
+    content: 'Hello! I\'m your Prism AI assistant. I can help you with spend analysis, supplier insights, and procurement recommendations. How can I help you today?',
   },
   {
     role: 'user',
@@ -44,14 +44,14 @@ export default function ChatPage() {
             className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
           >
             <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${msg.role === 'assistant'
-                ? 'bg-primary-100 text-primary-700'
-                : 'bg-neutral-200 text-neutral-600'
+              ? 'bg-primary-100 text-primary-700'
+              : 'bg-neutral-200 text-neutral-600'
               }`}>
               {msg.role === 'assistant' ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
             </div>
             <div className={`max-w-[70%] rounded-lg px-4 py-3 text-sm leading-relaxed ${msg.role === 'assistant'
-                ? 'bg-white shadow-sm border border-neutral-200 text-neutral-800'
-                : 'bg-primary-500 text-white'
+              ? 'bg-white shadow-sm border border-neutral-200 text-neutral-800'
+              : 'bg-primary-500 text-white'
               }`}>
               <p className="whitespace-pre-line">{msg.content}</p>
             </div>
