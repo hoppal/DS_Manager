@@ -337,7 +337,7 @@ From `TASKS.md`:
 ### Future Roadmap 🔮
 - [ ] Component Registry
 - [ ] Snippet Generator
-- [ ] Theme Editor
+- [x] Theme Editor (Advanced Version: Hover Picker & Dynamic Border Radius)
 - [ ] AI Playground
 - [ ] Component Changelog
 
