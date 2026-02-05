@@ -31,7 +31,8 @@ import {
     Grid,
     RotateCcw,
     Edit,
-    ChevronDown
+    ChevronDown,
+    X
 } from 'lucide-react';
 import { ICON_CATEGORIES, ALL_ICONS } from '../constants/icons';
 
