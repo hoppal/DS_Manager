@@ -792,6 +792,18 @@ function TypographyManager({ typography, updateTypography, resetTypography, rese
 }
 
 function DeployWizard() {
+    const [copiedSetup, setCopiedSetup] = useState(false);
+
+    const copySetupCommand = () => {
+        navigator.clipboard.writeText('./setup.sh');
+        setCopiedSetup(true);
+        setTimeout(() => setCopiedSetup(false), 2000);
+    };
+
+    const openDocumentation = () => {
+        window.open('/DS_Manager/design-context/design-system.md', '_blank');
+    };
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="space-y-6">
@@ -802,8 +814,12 @@ function DeployWizard() {
                     <div className="bg-neutral-900 rounded-lg p-4 font-mono text-sm text-neutral-300">
                         <div className="flex items-center justify-between mb-2">
                             <span className="text-neutral-500">Terminal</span>
-                            <button className="text-neutral-400 hover:text-white transition-colors">
-                                <Copy className="w-4 h-4" />
+                            <button
+                                onClick={copySetupCommand}
+                                className="text-neutral-400 hover:text-white transition-colors"
+                                title="Copy command"
+                            >
+                                {copiedSetup ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                             </button>
                         </div>
                         <p><span className="text-primary-400">$</span> ./setup.sh</p>
@@ -832,7 +848,11 @@ function DeployWizard() {
                             Our Tailwind preset automatically syncs your design tokens with your CSS utility classes.
                             Changes made in the manager will be reflected in your project's next build.
                         </p>
-                        <Button variant="outline" className="w-full bg-white border-primary-200 text-primary-700 hover:bg-primary-50">
+                        <Button
+                            variant="outline"
+                            className="w-full bg-white border-primary-200 text-primary-700 hover:bg-primary-50"
+                            onClick={openDocumentation}
+                        >
                             <ExternalLink className="w-4 h-4 mr-2" />
                             View Documentation
                         </Button>
