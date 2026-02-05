@@ -796,14 +796,14 @@ function TokensManager({ colors, updateColor, resetColor, resetAll, radius, setR
                         </Button>
                     )}
                 </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+                <CardContent style={{ padding: `${spacing}px` }}>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6" style={{ gap: `${spacing / 2}px` }}>
                         {colors.map((color, index) => (
                             <div key={color.name} className="space-y-3">
                                 <div className="relative group">
                                     <div
-                                        className={`aspect-square rounded-2xl shadow-inner cursor-pointer transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg ${!color.isCustom ? color.class : ''}`}
-                                        style={color.isCustom ? { backgroundColor: color.hex } : {}}
+                                        className={`aspect-square shadow-inner cursor-pointer transition-all duration-300 group-hover:scale-[1.05] group-hover:shadow-lg ${!color.isCustom ? color.class : ''}`}
+                                        style={color.isCustom ? { backgroundColor: color.hex, borderRadius: `${radius}px` } : { borderRadius: `${radius}px` }}
                                         onClick={() => document.getElementById(`color-picker-${index}`).click()}
                                     />
                                     <input
