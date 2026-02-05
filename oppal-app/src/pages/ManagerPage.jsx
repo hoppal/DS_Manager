@@ -435,6 +435,7 @@ Use semantic colors for button variants:
         { id: 'icons', label: 'Icons', icon: Grid },
         { id: 'tokens', label: 'Design Tokens', icon: Palette },
         { id: 'typography', label: 'Typography', icon: Type },
+        { id: 'integration', label: 'Integration Guide', icon: Code },
         { id: 'deploy', label: 'Deployment', icon: Terminal },
         { id: 'usage', label: 'AI Usage', icon: MessageCircle },
     ];
@@ -479,6 +480,7 @@ Use semantic colors for button variants:
                 {activeTab === 'gallery' && <ComponentGallery />}
                 {activeTab === 'patterns' && <PatternLibrary />}
                 {activeTab === 'icons' && <IconBrowser />}
+                {activeTab === 'integration' && <IntegrationGuide />}
                 {activeTab === 'tokens' && (
                     <TokensManager
                         colors={tokenColors}
@@ -1006,6 +1008,381 @@ function TypographyManager({ typography, updateTypography, resetTypography, rese
                         </CardContent>
                     </Card>
                 ))}
+            </div>
+        </div>
+    );
+}
+
+// Integration Guide Component
+function IntegrationGuide() {
+    const [copiedCode, setCopiedCode] = useState(null);
+
+    const copyCode = (id, code) => {
+        navigator.clipboard.writeText(code);
+        setCopiedCode(id);
+        setTimeout(() => setCopiedCode(null), 2000);
+    };
+
+    const codeExamples = {
+        tailwindReact: `// 1. Install Tailwind CSS
+npm install -D tailwindcss postcss autoprefixer
+
+// 2. Import your preset
+// tailwind.config.js
+module.exports = {
+  presets: [require('./tailwind.preset.js')],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+}
+
+// 3. Use in React components
+function MyButton() {
+  return (
+    <button className="bg-primary text-white px-4 py-2 rounded-lg">
+      Click me
+    </button>
+  );
+}`,
+        cssVariables: `/* 1. Import variables in your main CSS */
+@import './variables.css';
+
+/* 2. Use in your styles */
+.my-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4);
+  color: var(--color-neutral);
+}
+
+.primary-button {
+  background: var(--color-primary);
+  color: white;
+  font-family: var(--font-family-h1);
+  padding: var(--spacing-2) var(--spacing-4);
+}`,
+        tokensDriven: `// 1. Import tokens
+import tokens from './tokens.json';
+
+// 2. Generate CSS dynamically
+const colors = tokens.global.colors;
+
+const theme = {
+  primary: colors.primary['500'].value,
+  success: colors.success.value,
+  spacing: tokens.global.spacing,
+};
+
+// 3. Use in styled-components or emotion
+const Button = styled.button\`
+  background: \${theme.primary};
+  padding: \${theme.spacing['2'].value};
+\`;`,
+        nextjs: `// pages/_app.js
+import '../styles/globals.css'
+import '../variables.css'  // ← Import DS variables
+
+export default function App({ Component, pageProps }) {
+  return <Component {...pageProps} />
+}
+
+// tailwind.config.js
+module.exports = {
+  presets: [require('./tailwind.preset.js')],
+  content: [
+    './pages/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx}',
+  ],
+}`,
+        workflow: `# Workflow for Maintaining Consistency
+
+## 1. Initial Setup
+- Export DS package from manager
+- Install in your project
+- Configure build tools
+
+## 2. Development
+✓ Use semantic color names (primary, success, error)
+✓ Use spacing variables (--spacing-4, not hardcoded px)
+✓ Use typography tokens (--font-family-h1)
+✓ Reference documentation.md for guidelines
+
+## 3. Updates
+When design changes:
+1. Update tokens in DS Manager
+2. Click "Export Config"
+3. Replace files in your project
+4. Rebuild - all styles update automatically!
+
+## 4. New Projects
+- Copy the exported files
+- Follow integration guide
+- Maintain same token names
+- → Instant consistency across all projects`
+    };
+
+    return (
+        <div className="space-y-8">
+            {/* Header */}
+            <section className="space-y-4">
+                <h2 className="text-2xl font-bold text-neutral-900">Integration Guide</h2>
+                <p className="text-neutral-600">
+                    Learn how to use your exported design system in real projects to maintain consistent look and feel across all your applications.
+                </p>
+            </section>
+
+            {/* Overview */}
+            <Alert variant="info" title="How It Works">
+                <p className="text-sm">
+                    When you click "Export Config", you get 5 files that work together. Use them based on your tech stack:
+                    <strong> Tailwind</strong> (use preset), <strong>CSS</strong> (use variables), <strong>JavaScript</strong> (use tokens.json),
+                    or <strong>any combination</strong>. All files reflect your live customizations.
+                </p>
+            </Alert>
+
+            {/* Quick Start Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Code className="w-5 h-5 text-primary-500" />
+                            React + Tailwind CSS
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-sm text-neutral-600">
+                            Most common setup. Use the Tailwind preset for automatic integration.
+                        </p>
+                        <div className="relative">
+                            <pre className="bg-neutral-900 text-neutral-100 p-4 rounded-lg text-xs overflow-x-auto">
+                                {codeExamples.tailwindReact}
+                            </pre>
+                            <button
+                                onClick={() => copyCode('tailwindReact', codeExamples.tailwindReact)}
+                                className="absolute top-2 right-2 p-2 bg-neutral-800 hover:bg-neutral-700 rounded transition-colors"
+                                title="Copy code"
+                            >
+                                {copiedCode === 'tailwindReact' ?
+                                    <Check className="w-4 h-4 text-green-400" /> :
+                                    <Copy className="w-4 h-4 text-neutral-400" />
+                                }
+                            </button>
+                        </div>
+                        <div className="text-xs text-neutral-500 space-y-1">
+                            <div>✓ Automatic color utilities (bg-primary, text-success)</div>
+                            <div>✓ Spacing scale (p-4, m-6)</div>
+                            <div>✓ Typography (font-h1, text-h2)</div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Palette className="w-5 h-5 text-primary-500" />
+                            CSS Variables
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-sm text-neutral-600">
+                            Framework-agnostic. Works with vanilla CSS, SCSS, any framework.
+                        </p>
+                        <div className="relative">
+                            <pre className="bg-neutral-900 text-neutral-100 p-4 rounded-lg text-xs overflow-x-auto">
+                                {codeExamples.cssVariables}
+                            </pre>
+                            <button
+                                onClick={() => copyCode('cssVariables', codeExamples.cssVariables)}
+                                className="absolute top-2 right-2 p-2 bg-neutral-800 hover:bg-neutral-700 rounded transition-colors"
+                                title="Copy code"
+                            >
+                                {copiedCode === 'cssVariables' ?
+                                    <Check className="w-4 h-4 text-green-400" /> :
+                                    <Copy className="w-4 h-4 text-neutral-400" />
+                                }
+                            </button>
+                        </div>
+                        <div className="text-xs text-neutral-500 space-y-1">
+                            <div>✓ Use in any CSS file</div>
+                            <div>✓ Works with CSS Modules</div>
+                            <div>✓ Compatible with all frameworks</div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Settings className="w-5 h-5 text-primary-500" />
+                            Token-Driven (CSS-in-JS)
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-sm text-neutral-600">
+                            For styled-components, Emotion, or other CSS-in-JS libraries.
+                        </p>
+                        <div className="relative">
+                            <pre className="bg-neutral-900 text-neutral-100 p-4 rounded-lg text-xs overflow-x-auto">
+                                {codeExamples.tokensDriven}
+                            </pre>
+                            <button
+                                onClick={() => copyCode('tokensDriven', codeExamples.tokensDriven)}
+                                className="absolute top-2 right-2 p-2 bg-neutral-800 hover:bg-neutral-700 rounded transition-colors"
+                                title="Copy code"
+                            >
+                                {copiedCode === 'tokensDriven' ?
+                                    <Check className="w-4 h-4 text-green-400" /> :
+                                    <Copy className="w-4 h-4 text-neutral-400" />
+                                }
+                            </button>
+                        </div>
+                        <div className="text-xs text-neutral-500 space-y-1">
+                            <div>✓ JavaScript theme objects</div>
+                            <div>✓ TypeScript compatible</div>
+                            <div>✓ Dynamic theming support</div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Terminal className="w-5 h-5 text-primary-500" />
+                            Next.js Project
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <p className="text-sm text-neutral-600">
+                            Setup for Next.js with App Router or Pages Router.
+                        </p>
+                        <div className="relative">
+                            <pre className="bg-neutral-900 text-neutral-100 p-4 rounded-lg text-xs overflow-x-auto">
+                                {codeExamples.nextjs}
+                            </pre>
+                            <button
+                                onClick={() => copyCode('nextjs', codeExamples.nextjs)}
+                                className="absolute top-2 right-2 p-2 bg-neutral-800 hover:bg-neutral-700 rounded transition-colors"
+                                title="Copy code"
+                            >
+                                {copiedCode === 'nextjs' ?
+                                    <Check className="w-4 h-4 text-green-400" /> :
+                                    <Copy className="w-4 h-4 text-neutral-400" />
+                                }
+                            </button>
+                        </div>
+                        <div className="text-xs text-neutral-500 space-y-1">
+                            <div>✓ Server-side rendering compatible</div>
+                            <div>✓ App and Pages Router support</div>
+                            <div>✓ Optimized for production</div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Workflow Section */}
+            <Card className="bg-gradient-to-br from-primary-50 to-teal-50 border-primary-100">
+                <CardHeader>
+                    <CardTitle>Maintaining Consistency Across Projects</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="relative">
+                        <pre className="bg-white/70 text-neutral-800 p-6 rounded-lg text-sm whitespace-pre-wrap font-mono">
+                            {codeExamples.workflow}
+                        </pre>
+                        <button
+                            onClick={() => copyCode('workflow', codeExamples.workflow)}
+                            className="absolute top-2 right-2 p-2 bg-white hover:bg-neutral-100 rounded transition-colors shadow-sm"
+                            title="Copy workflow"
+                        >
+                            {copiedCode === 'workflow' ?
+                                <Check className="w-4 h-4 text-green-600" /> :
+                                <Copy className="w-4 h-4 text-neutral-600" />
+                            }
+                        </button>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Best Practices */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Best Practices for Consistency</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                            <h4 className="font-semibold text-green-700 flex items-center gap-2">
+                                <Check className="w-5 h-5" /> Do This
+                            </h4>
+                            <ul className="space-y-2 text-sm">
+                                <li className="flex gap-2">
+                                    <span className="text-green-600 font-bold">✓</span>
+                                    <span>Use semantic color names: <code className="bg-green-100 px-1 rounded">bg-primary</code>, <code className="bg-green-100 px-1 rounded">text-success</code></span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-green-600 font-bold">✓</span>
+                                    <span>Use token variables: <code className="bg-green-100 px-1 rounded">var(--color-primary)</code></span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-green-600 font-bold">✓</span>
+                                    <span>Reference documentation.md for component patterns</span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-green-600 font-bold">✓</span>
+                                    <span>Re-export when tokens change in manager</span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-green-600 font-bold">✓</span>
+                                    <span>Keep exported files in version control</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="space-y-3">
+                            <h4 className="font-semibold text-red-700 flex items-center gap-2">
+                                <X className="w-5 h-5" /> Avoid This
+                            </h4>
+                            <ul className="space-y-2 text-sm">
+                                <li className="flex gap-2">
+                                    <span className="text-red-600 font-bold">✗</span>
+                                    <span>Hardcode colors: <code className="bg-red-100 px-1 rounded">bg-[#00af91]</code></span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-red-600 font-bold">✗</span>
+                                    <span>Use arbitrary spacing: <code className="bg-red-100 px-1 rounded">padding: 13px</code></span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-red-600 font-bold">✗</span>
+                                    <span>Create custom colors outside the system</span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-red-600 font-bold">✗</span>
+                                    <span>Modify exported files directly (regenerate instead)</span>
+                                </li>
+                                <li className="flex gap-2">
+                                    <span className="text-red-600 font-bold">✗</span>
+                                    <span>Skip documentation - it's your team's reference</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Quick Tips */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Alert variant="success" title="Pro Tip">
+                    <p className="text-sm">
+                        Store exported files in a shared repository or npm package. All projects import from one source = perfect consistency.
+                    </p>
+                </Alert>
+                <Alert variant="info" title="Live Preview">
+                    <p className="text-sm">
+                        Changes you make in Design Tokens tab are instantly reflected in the Export Config files. Test before exporting!
+                    </p>
+                </Alert>
+                <Alert variant="warning" title="Version Control">
+                    <p className="text-sm">
+                        Commit exported files to git. When tokens change, commit the update. Track design evolution over time.
+                    </p>
+                </Alert>
             </div>
         </div>
     );
