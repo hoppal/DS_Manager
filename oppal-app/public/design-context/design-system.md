@@ -1,14 +1,14 @@
-# Orbitron Design System
+# Prism Design System
 
-**Version:** 1.0.0  
-**Last Updated:** 2026-01-29  
-**Brand:** Orbitron Spend Management
+**Version:** 1.0.0
+**Last Updated:** 2026-02-05
+**Brand:** Oppal Spend Management (Prism DS)
 
-This design system captures the visual language of the Orbitron spend management platform, optimized for data-heavy dashboards, financial interfaces, and B2B applications.
+This design system captures the visual language of the Oppal spend management platform, optimized for data-heavy dashboards, financial interfaces, and B2B applications.
 
 ## Quick Reference for AI Tools
 
-When generating code for Orbitron, follow these principles:
+When generating code for Oppal/Prism, follow these principles:
 - Use the teal/green primary color (#00af91) for interactive elements and data visualization
 - Apply clean, modern card-based layouts with subtle shadows
 - Use consistent spacing and rounded corners (12px default)
@@ -35,9 +35,9 @@ Chart Gradient:   linear-gradient(135deg, #00af91, #009b9b)
 
 ### Semantic Colors
 ```
-Success (Positive):  #16a34a (↑ increases, positive metrics)
-Error (Negative):    #dc2626 (↓ decreases, alerts)
-Warning:             #ea580c (cautions)
+Success (Positive):  #22c55e (↑ increases, positive metrics)
+Error (Negative):    #ef4444 (↓ decreases, alerts)
+Warning:             #f97316 (cautions)
 ```
 
 ### Neutral Colors
@@ -113,7 +113,7 @@ xl:    16px  - Large containers
 full:  9999px - Pills, avatars, circular elements
 ```
 
-**Note:** Cards use `12px` (lg) radius consistently throughout Orbitron.
+**Note:** Cards use `12px` (lg) radius consistently throughout Prism DS.
 
 ## Shadows
 
@@ -310,7 +310,7 @@ xl:   1280px - Desktops
 
 ## Brand Personality
 
-**Orbitron embodies:**
+**Prism DS embodies:**
 - Professional and trustworthy
 - Data-driven and analytical
 - Clean and modern
@@ -361,4 +361,4 @@ xl:   1280px - Desktops
 - Full page templates in `.context/templates/`
 - Data visualization guidelines in `.context/guidelines/`
 
-**Remember:** Orbitron is about clarity, professionalism, and making complex data accessible. Every design choice should serve these goals.
+**Remember:** Prism DS is about clarity, professionalism, and making complex data accessible. Every design choice should serve these goals.
