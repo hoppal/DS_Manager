@@ -9,6 +9,7 @@ import ChatPage from './pages/ChatPage';
 import ManagerPage from './pages/ManagerPage';
 import BudgetOverview from './pages/BudgetOverview';
 import SettingsPage from './pages/SettingsPage';
+import AIWorkflowPage from './pages/AIWorkflowPage';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/contracts" element={<ContractsPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/manager" element={<ManagerPage />} />
+        <Route path="/ai-workflow" element={<AIWorkflowPage />} />
         <Route path="/budget" element={<BudgetOverview />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Routes>

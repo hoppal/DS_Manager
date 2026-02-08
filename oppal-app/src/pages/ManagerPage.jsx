@@ -32,9 +32,13 @@ import {
     RotateCcw,
     Edit,
     ChevronDown,
-    X
+    X,
+    Sparkles,
+    BookOpen,
+    TrendingUp
 } from 'lucide-react';
 import { ICON_CATEGORIES, ALL_ICONS } from '../constants/icons';
+import BudgetOverview from './BudgetOverview';
 
 export default function ManagerPage() {
     const [activeTab, setActiveTab] = useState('gallery');
@@ -439,6 +443,8 @@ Use semantic colors for button variants:
         { id: 'integration', label: 'Integration Guide', icon: Code },
         { id: 'deploy', label: 'Deployment', icon: Terminal },
         { id: 'usage', label: 'AI Usage', icon: MessageCircle },
+        { id: 'ai-workflow', label: 'AI Workflow', icon: Sparkles },
+        { id: 'budget', label: 'Budget Overview', icon: TrendingUp },
     ];
 
     return (
@@ -504,7 +510,271 @@ Use semantic colors for button variants:
                 )}
                 {activeTab === 'deploy' && <DeployWizard />}
                 {activeTab === 'usage' && <UsageGuide />}
+                {activeTab === 'ai-workflow' && <AIWorkflowContent />}
+                {activeTab === 'budget' && <BudgetOverview />}
             </div>
+        </div>
+    );
+}
+
+function AIWorkflowContent() {
+    const downloadGuide = () => {
+        window.open('https://github.com/hoppal/DS_Manager/blob/main/AI_WORKFLOW_GUIDE.md', '_blank');
+    };
+
+    return (
+        <div className="space-y-8">
+            {/* Header */}
+            <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-teal-600 flex items-center justify-center">
+                        <Sparkles className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                        <h1 className="text-2xl font-bold text-neutral-900">AI Workflow Guide</h1>
+                        <p className="text-neutral-600 font-medium">Using Prism Design System with Claude Code & Gemini CLI</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Alert */}
+            <Alert variant="info" title="Maintain Design Consistency with AI Assistants">
+                This workflow helps you ensure that AI coding assistants like Claude Code and Gemini CLI
+                consistently use your Prism Design System tokens, components, and patterns across all projects.
+            </Alert>
+
+            {/* Main Workflow Diagram */}
+            <Card className="overflow-hidden border-teal-100">
+                <CardHeader className="bg-gradient-to-r from-primary-50 to-teal-50 border-b border-primary-100 py-4">
+                    <CardTitle className="text-lg">4-Step Workflow</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                    <div className="bg-white p-8">
+                        <img
+                            src={`${import.meta.env.BASE_URL || '/'}ai_workflow_diagram.png`}
+                            alt="Prism Design System AI Workflow"
+                            className="w-full h-auto rounded-xl shadow-2xl border border-neutral-100"
+                        />
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Step Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Step 1 */}
+                <Card className="border-l-4 border-l-primary-500 shadow-sm hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="flex items-center gap-2 text-base">
+                            <div className="w-8 h-8 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center font-bold text-sm">
+                                1
+                            </div>
+                            Export Design System
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        <p className="text-sm text-neutral-600">
+                            Click "Export Config" in the DS Manager to download all design tokens,
+                            Tailwind preset, CSS variables, and documentation.
+                        </p>
+                        <div className="bg-neutral-50 p-3 rounded-lg text-xs font-mono text-neutral-700 border border-neutral-100">
+                            <div className="flex items-center gap-2"><Check className="w-3 h-3 text-success-500" /> tailwind.preset.js</div>
+                            <div className="flex items-center gap-2"><Check className="w-3 h-3 text-success-500" /> variables.css</div>
+                            <div className="flex items-center gap-2"><Check className="w-3 h-3 text-success-500" /> tokens.json</div>
+                            <div className="flex items-center gap-2"><Check className="w-3 h-3 text-success-500" /> ai-context.md</div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Step 2 */}
+                <Card className="border-l-4 border-l-teal-500 shadow-sm hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="flex items-center gap-2 text-base">
+                            <div className="w-8 h-8 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-sm">
+                                2
+                            </div>
+                            Share Context with AI
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        <p className="text-sm text-neutral-600">
+                            Start every AI conversation by asking it to read your ai-context.md file first.
+                            This ensures the AI knows your design rules.
+                        </p>
+                        <div className="bg-neutral-900 p-4 rounded-xl text-xs font-mono text-neutral-100 shadow-inner">
+                            <div className="text-primary-400 opacity-60">// First message to AI:</div>
+                            <div className="mt-1 font-semibold text-primary-300">"Read @ai-context.md</div>
+                            <div className="font-semibold text-primary-300">for design system rules."</div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Step 3 */}
+                <Card className="border-l-4 border-l-success-500 shadow-sm hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="flex items-center gap-2 text-base">
+                            <div className="w-8 h-8 rounded-full bg-success-100 text-success-700 flex items-center justify-center font-bold text-sm">
+                                3
+                            </div>
+                            Build with Tokens
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        <p className="text-sm text-neutral-600">
+                            Use semantic token names instead of hardcoded values. This ensures consistency
+                            and makes updates automatic.
+                        </p>
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between bg-success-50/50 p-2 rounded-lg border border-success-100">
+                                <div className="flex items-center gap-2 text-sm">
+                                    <span className="text-success-600 font-bold">✓</span>
+                                    <code className="text-success-700 font-bold">bg-primary</code>
+                                </div>
+                                <span className="text-[10px] uppercase tracking-wider font-bold text-success-600">Perfect</span>
+                            </div>
+                            <div className="flex items-center justify-between bg-error-50/50 p-2 rounded-lg border border-error-100 opacity-60">
+                                <div className="flex items-center gap-2 text-sm">
+                                    <span className="text-error-600 font-bold">✗</span>
+                                    <code className="text-error-700">#00AF91</code>
+                                </div>
+                                <span className="text-[10px] uppercase tracking-wider font-bold text-error-600">Avoid</span>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Step 4 */}
+                <Card className="border-l-4 border-l-warning-500 shadow-sm hover:shadow-md transition-shadow">
+                    <CardHeader className="pb-2">
+                        <CardTitle className="flex items-center gap-2 text-base">
+                            <div className="w-8 h-8 rounded-full bg-warning-100 text-warning-700 flex items-center justify-center font-bold text-sm">
+                                4
+                            </div>
+                            Compliance Check
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        <p className="text-sm text-neutral-600">
+                            Before finishing, ask the AI to validate that all code follows your design system rules.
+                        </p>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                            <div className="flex items-center gap-2 p-1.5 bg-neutral-50 rounded border border-neutral-100">
+                                <Check className="w-3 h-3 text-success-500" />
+                                <span className="text-neutral-700 font-medium">Colors</span>
+                            </div>
+                            <div className="flex items-center gap-2 p-1.5 bg-neutral-50 rounded border border-neutral-100">
+                                <Check className="w-3 h-3 text-success-500" />
+                                <span className="text-neutral-700 font-medium">Spacing</span>
+                            </div>
+                            <div className="flex items-center gap-2 p-1.5 bg-neutral-50 rounded border border-neutral-100">
+                                <Check className="w-3 h-3 text-success-500" />
+                                <span className="text-neutral-700 font-medium">Components</span>
+                            </div>
+                            <div className="flex items-center gap-2 p-1.5 bg-neutral-50 rounded border border-neutral-100">
+                                <Check className="w-3 h-3 text-success-500" />
+                                <span className="text-neutral-700 font-medium">Fonts</span>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Quick Starter */}
+            <Card className="border-2 border-primary-200 bg-gradient-to-br from-white to-primary-50 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-primary-100/30 rounded-full -mr-16 -mt-16 blur-2xl" />
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Sparkles className="w-5 h-5 text-primary-600" />
+                        Quick Starter Prompts
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-bold text-primary-700 uppercase tracking-widest">Claude Code</span>
+                                <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => navigator.clipboard.writeText("I'm starting a new React project that MUST use the Prism Design System.\n\nPlease read this context file first:\n@ai-context.md\n\nKey requirements:\n1. Use Tailwind with our preset (tailwind.preset.js)\n2. Only use semantic colors (bg-primary, text-success, etc.)\n3. Use components from @oppal/ui when available\n4. Reference: https://hoppal.github.io/DS_Manager/\n\nLet's start by setting up the Tailwind config.")}>
+                                    <Copy className="w-3 h-3 mr-1" /> Copy
+                                </Button>
+                            </div>
+                            <div className="bg-neutral-900 rounded-lg p-4">
+                                <pre className="text-neutral-100 text-xs font-mono whitespace-pre-wrap leading-relaxed">
+                                    {`I'm starting a new React project that MUST use the Prism Design System.
+
+Please read this context file first:
+@ai-context.md
+
+Key requirements:
+1. Use Tailwind with our preset (tailwind.preset.js)
+2. Only use semantic colors (bg-primary, text-success, etc.)
+3. Use components from @oppal/ui when available
+4. Reference: https://hoppal.github.io/DS_Manager/
+
+Let's start by setting up the Tailwind config.`}
+                                </pre>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-bold text-teal-700 uppercase tracking-widest">Gemini CLI</span>
+                                <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => navigator.clipboard.writeText("I'm building a React app using the Prism Design System.\n\nIMPORTANT: Read .gemini/ai-context.md first for design system rules.\n\nAll UI must follow these constraints:\n- Semantic colors only (bg-primary, text-success, etc.)\n- Use @oppal/ui components\n- Tailwind utilities with our preset\n- No hardcoded values\n\nConfirm you've read the context, then let's set up Tailwind.")}>
+                                    <Copy className="w-3 h-3 mr-1" /> Copy
+                                </Button>
+                            </div>
+                            <div className="bg-neutral-900 rounded-lg p-4">
+                                <pre className="text-neutral-100 text-xs font-mono whitespace-pre-wrap leading-relaxed">
+                                    {`I'm building a React app using the Prism Design System.
+
+IMPORTANT: Read .gemini/ai-context.md first for design system rules.
+
+All UI must follow these constraints:
+- Semantic colors only (bg-primary, text-success, etc.)
+- Use @oppal/ui components
+- Tailwind utilities with our preset
+- No hardcoded values
+
+Confirm you've read the context, then let's set up Tailwind.`}
+                                </pre>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <span className="text-xs font-bold text-success-700 uppercase tracking-widest">Compliance Check</span>
+                                <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => navigator.clipboard.writeText("Review the last changes for Prism Design System compliance:\n\n1. Colors: Are all using semantic names (bg-primary, text-success)?\n2. Spacing: Are all using Tailwind scale (p-4, m-6)?\n3. Components: Are all from @oppal/ui or using our tokens?\n4. Typography: Are all using our font families?\n\nList any violations and fix them.")}>
+                                    <Copy className="w-3 h-3 mr-1" /> Copy
+                                </Button>
+                            </div>
+                            <div className="bg-neutral-900 rounded-lg p-4">
+                                <pre className="text-neutral-100 text-xs font-mono whitespace-pre-wrap leading-relaxed">
+                                    {`Review the last changes for Prism Design System compliance:
+
+1. Colors: Are all using semantic names (bg-primary, text-success)?
+2. Spacing: Are all using Tailwind scale (p-4, m-6)?
+3. Components: Are all from @oppal/ui or using our tokens?
+4. Typography: Are all using our font families?
+
+List any violations and fix them.`}
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Download Guide */}
+            <Card className="bg-neutral-900 text-white">
+                <CardContent className="py-8 text-center space-y-4">
+                    <h3 className="text-xl font-bold">Ready to master the workflow?</h3>
+                    <p className="text-neutral-400 text-sm max-w-lg mx-auto">
+                        Download the full step-by-step guide with code examples and advanced strategies for AI-assisted design systems.
+                    </p>
+                    <Button variant="primary" size="lg" className="bg-primary-500 hover:bg-primary-600 text-white" onClick={downloadGuide}>
+                        <Download className="w-5 h-5 mr-3" />
+                        Download Full Guide
+                    </Button>
+                </CardContent>
+            </Card>
         </div>
     );
 }

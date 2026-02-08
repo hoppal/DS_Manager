@@ -32,3 +32,28 @@
 - **Testing**: Implement the testing framework (Vitest) as per `TASKS.md`.
 - **CI/CD**: Set up a proper GitHub Actions workflow for automated testing and deployment.
 - **Components**: Continue expanding the component library (e.g., adding `Toast`, `Modal`).
+
+---
+
+# Session Summary: GitHub Pages Deployment Troubleshooting
+
+**Date**: Friday, 6 February 2026
+
+## 🎯 Objectives
+- Build and run the `oppal-app` locally.
+- Investigate and resolve "old content" issue on GitHub Pages deployment.
+
+## ✅ Accomplishments
+
+### 1. Initial Application Build
+- Executed `npm run dev` in `oppal-app` to start local development server. (User cancelled execution)
+
+### 2. GitHub Pages Deployment Troubleshooting
+- User reported that the deployed GitHub Pages URL (`https://hoppal.github.io/DS_Manager/#/manager`) was showing old content.
+- Reviewed `oppal-app/package.json` to understand the `npm run deploy` script, which includes `npm run build` and `gh-pages -d dist`.
+- Performed multiple cycles of `npm run build` and `npm run deploy` within the `oppal-app` directory to ensure the latest code was compiled and pushed.
+- Utilized output redirection to a temporary log file (`deploy_output.log`) to confirm successful publishing by the `gh-pages` tool, as the direct console output was truncated.
+- Informed the user that the redeployment was successful and advised waiting for CDN caching (10-15 minutes) before checking the live URL again.
+
+## 🧹 Cleanup
+- Removed temporary log file: `/Users/aaronoppal/.gemini/tmp/af6f843386a38f035a328706097b14b8f3853c032411add55e32ebb11af3966a/deploy_output.log`.
